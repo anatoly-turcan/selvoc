@@ -19,6 +19,12 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@modules": ["src/modules"],
+      "@modules/*": ["src/modules/*"],
+      "@common": ["src/common"],
+      "@common/*": ["src/common/*"]
+    }
   }
 }

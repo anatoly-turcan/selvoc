@@ -9,7 +9,7 @@ module.exports = {
   extends: [
     'airbnb-base',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
   ],
   root: true,
   env: {
@@ -23,21 +23,42 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/explicit-module-boundary-types': 'warn',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/prefer-default-export': 'off',
-    'import/order': ['error', {
-      groups: [
-        'builtin',
-        'external',
-        'internal',
-      ],
-      'newlines-between': 'always',
-      alphabetize: {
-        order: 'asc',
-        caseInsensitive: true,
+    'no-useless-constructor': 'off',
+    'no-empty-function': 'off',
+    'no-use-before-define': 'off',
+    'class-methods-use-this': 'off',
+    'no-plusplus': 'off',
+    'max-len': [
+      'error',
+      {
+        code: 100,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
       },
-    }],
+    ],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'always',
+        pathGroups: [
+          {
+            pattern: '@common/**',
+            group: 'internal',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
     'padding-line-between-statements': [
       'error',
       { blankLine: 'always', prev: '*', next: 'return' },
