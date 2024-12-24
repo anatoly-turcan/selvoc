@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { NestEventClientModule } from '@common/nest-event-client';
 import { NestKeycloakAdminClientModule } from '@common/nest-keycloak-admin-client';
 
+import { UserSyncApplicationService } from './application/services/user-sync.application-service';
+import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from './domain';
 import { loadUserConfig, UserConfig } from './infrastructure/config/user.config';
-import { TestService } from './test.service';
+import { KeycloakUserClient } from './infrastructure/keycloak';
+import { UserTypeormEntity, UserTypeormRepository } from './infrastructure/persistence';
 
 @Module({
   imports: [
@@ -32,7 +36,12 @@ import { TestService } from './test.service';
         logger: console,
       }),
     }),
+    TypeOrmModule.forFeature([UserTypeormEntity]),
   ],
-  providers: [TestService],
+  providers: [
+    { provide: KEYCLOAK_USER_CLIENT_TOKEN, useClass: KeycloakUserClient },
+    { provide: USER_REPOSITORY_TOKEN, useClass: UserTypeormRepository },
+    UserSyncApplicationService,
+  ],
 })
 export class UserModule {}
