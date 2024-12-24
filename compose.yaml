@@ -1,0 +1,73 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U ${POSTGRES_USERNAME:-postgres}' ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./configs/postgres/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    restart: unless-stopped
+    ports:
+      - ${RABBITMQ_PORT:-5672}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT:-15672}:15672
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+
+  keycloak:
+    build:
+      context: .
+      dockerfile: configs/keycloak/Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${KEYCLOAK_PORT:-5555}:${KEYCLOAK_PORT:-5555}
+    environment:
+      # https://www.keycloak.org/server/all-config
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_DB: postgres
+      KC_DB_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: ${POSTGRES_PORT:-5432}
+      KC_DB_URL_DATABASE: keycloak
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_HTTP_RELATIVE_PATH: /
+      KC_HTTP_PORT: ${KEYCLOAK_PORT:-5555}
+      # Provider: https://github.com/aznamier/keycloak-event-listener-rabbitmq
+      KK_TO_RMQ_URL: rabbitmq
+      KK_TO_RMQ_PORT: ${RABBITMQ_PORT:-5672}
+      KK_TO_RMQ_VHOST: /
+      KK_TO_RMQ_EXCHANGE: ${KEYCLOAK_RABBITMQ_EXCHANGE:-keycloak.topic}
+      KK_TO_RMQ_USERNAME: guest
+      KK_TO_RMQ_PASSWORD: guest
+    command: start-dev --import-realm
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./configs/keycloak/import:/opt/keycloak/data/import
+      - ./configs/keycloak/providers:/opt/keycloak/providers
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
