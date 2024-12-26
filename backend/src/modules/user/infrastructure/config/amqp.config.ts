@@ -41,12 +41,12 @@ export const amqpConfig: AmqpConfig = {
                   routingKey: `KK.EVENT.ADMIN.${keycloakConfig.realm}.SUCCESS.USER.CREATE`,
                 },
                 {
-                  event: UserRegisteredKeycloakEvent,
-                  routingKey: `KK.EVENT.CLIENT.${keycloakConfig.realm}.SUCCESS.*.REGISTER`,
-                },
-                {
                   event: UserUpdatedAdminKeycloakEvent,
                   routingKey: `KK.EVENT.ADMIN.${keycloakConfig.realm}.SUCCESS.USER.UPDATE`,
+                },
+                {
+                  event: UserRegisteredKeycloakEvent,
+                  routingKey: `KK.EVENT.CLIENT.${keycloakConfig.realm}.SUCCESS.*.REGISTER`,
                 },
               ],
             },

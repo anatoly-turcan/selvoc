@@ -32,6 +32,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'class-methods-use-this': 'off',
     'no-plusplus': 'off',
+    'lines-between-class-members': 'off',
     'max-len': [
       'error',
       {
@@ -49,6 +50,10 @@ module.exports = {
         pathGroups: [
           {
             pattern: '@common/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@modules/**',
             group: 'internal',
           },
         ],
