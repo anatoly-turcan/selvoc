@@ -6,8 +6,8 @@ export type BuildChatMessageParams = {
   id?: string;
   userId: string;
   content: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
 } & ({ chat: Chat } | { chatId: string });
 
 export class ChatMessage {

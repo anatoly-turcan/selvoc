@@ -8,6 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CommonConfig, loadCommonConfig } from '@common/infrastructure/config/common.config';
+import { ChatModule } from '@modules/chat/chat.module';
 
 import { UserModule } from './modules/user/user.module';
 
@@ -37,6 +38,7 @@ import { UserModule } from './modules/user/user.module';
       },
     }),
     UserModule,
+    ChatModule,
   ],
 })
 export class AppModule {}

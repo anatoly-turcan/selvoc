@@ -3,15 +3,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AccessDeniedException } from '@common/application/exceptions';
 import { EventClient } from '@common/event-client';
 
+import { Chat, ChatMembership, ChatMessage } from '../../domain/entities';
+import { ChatMemberJoinedEvent, ChatMessageCreatedEvent } from '../../domain/events';
 import {
-  CHAT_MEMBER_REPOSITORY_TOKEN,
+  CHAT_MEMBERSHIP_REPOSITORY_TOKEN,
   CHAT_MESSAGE_REPOSITORY_TOKEN,
   CHAT_REPOSITORY_TOKEN,
-} from '../../domain/constants';
-import { Chat, ChatMember, ChatMessage } from '../../domain/entities';
-import { ChatMemberJoinedEvent, ChatMessageCreatedEvent } from '../../domain/events';
-import { ChatDoesNotExistException } from '../exceptions';
-import { IChatMemberRepository, IChatMessageRepository, IChatRepository } from '../repositories';
+} from '../constants';
+import { ChatNotFoundException, UserAlreadyMemberException } from '../exceptions';
+import {
+  IChatMembershipRepository,
+  IChatMessageRepository,
+  IChatRepository,
+} from '../repositories';
 
 export type CreateChatParams = {
   name: string;
@@ -39,15 +43,15 @@ export class ChatService {
   constructor(
     @Inject(CHAT_REPOSITORY_TOKEN)
     private readonly chats: IChatRepository,
-    @Inject(CHAT_MEMBER_REPOSITORY_TOKEN)
-    private readonly chatMembers: IChatMemberRepository,
+    @Inject(CHAT_MEMBERSHIP_REPOSITORY_TOKEN)
+    private readonly chatMemberships: IChatMembershipRepository,
     @Inject(CHAT_MESSAGE_REPOSITORY_TOKEN)
     private readonly chatMessages: IChatMessageRepository,
     private readonly events: EventClient,
   ) {}
 
   public async create(params: CreateChatParams, actorId: string): Promise<Chat> {
-    const chat = await this.chats.create(new Chat(params));
+    const chat = await this.chats.save(new Chat(params));
 
     await this.addMember({ chatId: chat.id, userId: actorId });
 
@@ -57,6 +61,7 @@ export class ChatService {
   public async inviteMember(params: InviteChatMemberParams, actorId: string): Promise<void> {
     await this.assertExists(params.chatId);
     await this.assertAccess(params.chatId, actorId);
+    await this.assertNotMember(params.chatId, params.userId);
 
     await this.addMember(params);
   }
@@ -65,7 +70,7 @@ export class ChatService {
     await this.assertExists(params.chatId);
     await this.assertAccess(params.chatId, actorId);
 
-    const message = await this.chatMessages.create(new ChatMessage({ ...params, userId: actorId }));
+    const message = await this.chatMessages.save(new ChatMessage({ ...params, userId: actorId }));
 
     await this.events.produce(ChatMessageCreatedEvent.fromMessage(message));
   }
@@ -74,22 +79,39 @@ export class ChatService {
     return this.isMember(params.chatId, params.userId);
   }
 
-  private async addMember(params: AddChatMemberParams): Promise<ChatMember> {
-    const member = await this.chatMembers.create(new ChatMember(params));
+  public async getAllByUserId(userId: string): Promise<Chat[]> {
+    const memberships = await this.chatMemberships.findMany({ where: { userId } });
 
-    await this.events.produce(ChatMemberJoinedEvent.fromMember(member));
+    return this.chats.findByIds(memberships.map((m) => m.chatId));
+  }
 
-    return member;
+  public async getById(id: string, actorId: string): Promise<Chat> {
+    const chat = await this.chats.findById(id);
+    if (!chat) {
+      throw new ChatNotFoundException();
+    }
+
+    await this.assertAccess(id, actorId);
+
+    return chat;
+  }
+
+  private async addMember(params: AddChatMemberParams): Promise<ChatMembership> {
+    const membership = await this.chatMemberships.save(new ChatMembership(params));
+
+    await this.events.produce(ChatMemberJoinedEvent.fromMembership(membership));
+
+    return membership;
   }
 
   private async isMember(chatId: string, userId: string): Promise<boolean> {
-    return this.chatMembers.exists(chatId, userId);
+    return this.chatMemberships.exists(chatId, userId);
   }
 
   private async assertExists(chatId: string): Promise<void> {
     const doesExist = this.chats.exists(chatId);
     if (!doesExist) {
-      throw new ChatDoesNotExistException();
+      throw new ChatNotFoundException();
     }
   }
 
@@ -97,6 +119,13 @@ export class ChatService {
     const isMember = await this.isMember(chatId, actorId);
     if (!isMember) {
       throw new AccessDeniedException();
+    }
+  }
+
+  private async assertNotMember(chatId: string, userId: string): Promise<void> {
+    const isMember = await this.isMember(chatId, userId);
+    if (isMember) {
+      throw new UserAlreadyMemberException();
     }
   }
 }

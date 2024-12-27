@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 import { Event } from '@common/event-client';
 
-import { ChatMember } from '../entities';
+import { ChatMembership } from '../entities';
 
 @Event('chat.member.joined')
 export class ChatMemberJoinedEvent {
@@ -19,7 +19,7 @@ export class ChatMemberJoinedEvent {
     this.userId = userId;
   }
 
-  public static fromMember(member: ChatMember): ChatMemberJoinedEvent {
-    return new ChatMemberJoinedEvent(member.chatId, member.userId);
+  public static fromMembership(membership: ChatMembership): ChatMemberJoinedEvent {
+    return new ChatMemberJoinedEvent(membership.chatId, membership.userId);
   }
 }
