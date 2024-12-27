@@ -3,6 +3,9 @@ import { EventConstructor } from '../types';
 import { addEventInterceptorHandler } from './event-interceptor.decorator';
 
 export const EventListener =
-  (eventConstructor: EventConstructor): MethodDecorator =>
-  (target, propertyKey) =>
-    addEventInterceptorHandler({ eventConstructor, propertyKey }, target);
+  (...eventConstructors: EventConstructor[]): MethodDecorator =>
+  (target, propertyKey) => {
+    eventConstructors.map((eventConstructor) =>
+      addEventInterceptorHandler({ eventConstructor, propertyKey }, target),
+    );
+  };

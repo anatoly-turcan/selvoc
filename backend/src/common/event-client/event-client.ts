@@ -80,7 +80,7 @@ export class EventClient {
     }
   }
 
-  protected async onRawEvent(key: string, payload: string): Promise<void> {
+  protected async onRawEvent(key: string, payload: string | object): Promise<void> {
     const eventConstructor = getEventConstructor(key);
     if (!eventConstructor) {
       this.logger.debug(`Missing event constructor for "${key}"`);
@@ -95,8 +95,11 @@ export class EventClient {
     this.distributor.distribute(event);
   }
 
-  protected transform(eventConstructor: EventConstructor, payload: string): object {
-    return plainToClass(eventConstructor, JSON.parse(payload)) as object;
+  protected transform(eventConstructor: EventConstructor, payload: string | object): object {
+    return plainToClass(
+      eventConstructor,
+      typeof payload === 'string' ? JSON.parse(payload) : payload,
+    ) as object;
   }
 
   public static readonly DEFAULT_VALIDATION_OPTIONS: ValidatorOptions = {

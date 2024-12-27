@@ -5,7 +5,7 @@ import { EventLogger } from './logger.interface';
 
 const NOTIFICATION_KEY = 'event';
 
-export type EventConsumerListener = (key: string, payload: string) => unknown;
+export type EventConsumerListener = (key: string, payload: string | object) => unknown;
 
 export abstract class EventConsumer {
   protected readonly distributor = EventDistributor.getInstance();
