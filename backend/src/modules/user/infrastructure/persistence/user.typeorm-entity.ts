@@ -1,12 +1,14 @@
-import { UserKeycloakData } from '@modules/user/domain';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+
+import { PropertiesOf } from '@common/utils';
+import { User, UserKeycloakData } from '@modules/user/domain';
 
 @Entity('users')
 export class UserTypeormEntity {
   @PrimaryColumn('uuid')
   public id: string;
 
-  @Column({ unique: true })
+  @Column('varchar', { unique: true })
   public username: string;
 
   @Column('varchar', { nullable: true })
@@ -21,13 +23,13 @@ export class UserTypeormEntity {
   @Column('jsonb', { nullable: false })
   public keycloakData: UserKeycloakData;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp with time zone' })
   public createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   public updatedAt: Date;
 
-  constructor(params?: UserTypeormEntity) {
+  constructor(params?: PropertiesOf<UserTypeormEntity>) {
     if (params) {
       this.id = params.id;
       this.username = params.username;
@@ -38,5 +40,17 @@ export class UserTypeormEntity {
       this.createdAt = params.createdAt;
       this.updatedAt = params.updatedAt;
     }
+  }
+
+  public toDomain(): User {
+    const { createdAt, updatedAt, ...commonProps } = this;
+
+    return new User({ ...commonProps, timestamps: { createdAt, updatedAt } });
+  }
+
+  public static fromDomain(entity: User): UserTypeormEntity {
+    const { timestamps, ...commonProps } = entity;
+
+    return new UserTypeormEntity({ ...commonProps, ...timestamps });
   }
 }

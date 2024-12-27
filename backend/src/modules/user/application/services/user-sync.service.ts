@@ -8,16 +8,19 @@ import {
   UserUpdatedAdminKeycloakEvent,
 } from '@common/events';
 
-import { KEYCLOAK_USER_CLIENT_TOKEN, User, USER_REPOSITORY_TOKEN } from '../../domain';
+import { User } from '../../domain';
+import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from '../constants';
 import { IKeycloakUserClient } from '../keycloak';
 import { IUserRepository } from '../repositories';
 
 @Injectable()
 @EventInterceptor()
-export class UserSyncApplicationService {
+export class UserSyncService {
   constructor(
-    @Inject(USER_REPOSITORY_TOKEN) private readonly repository: IUserRepository,
-    @Inject(KEYCLOAK_USER_CLIENT_TOKEN) private readonly keycloakUserClient: IKeycloakUserClient,
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly users: IUserRepository,
+    @Inject(KEYCLOAK_USER_CLIENT_TOKEN)
+    private readonly keycloakUserClient: IKeycloakUserClient,
   ) {}
 
   public async sync(userId: string): Promise<void> {
@@ -28,9 +31,9 @@ export class UserSyncApplicationService {
       return;
     }
 
-    const existingUser = await this.repository.findById(userId);
+    const existingUser = await this.users.findOne({ where: { id: userId } });
 
-    await this.repository.save(
+    await this.users.save(
       new User({
         ...existingUser,
         ...keycloakUser,
@@ -40,9 +43,11 @@ export class UserSyncApplicationService {
     );
   }
 
-  @EventListener(UserCreatedAdminKeycloakEvent)
-  @EventListener(UserRegisteredKeycloakEvent)
-  @EventListener(UserUpdatedAdminKeycloakEvent)
+  @EventListener(
+    UserCreatedAdminKeycloakEvent,
+    UserRegisteredKeycloakEvent,
+    UserUpdatedAdminKeycloakEvent,
+  )
   public async handleUserEvent(
     event:
       | UserCreatedAdminKeycloakEvent
