@@ -9,14 +9,14 @@ import {
 
 import { keycloakConfig } from './keycloak.config';
 
-export type AmqpConfig = AmqpEventTransportConfig;
+export type AmqpEventsConfig = AmqpEventTransportConfig;
 
 const queueName = get('USER_AMQP_QUEUE_NAME').default('user-service').asString();
 const keycloakExchangeName = get('USER_AMQP_KEYCLOAK_EXCHANGE_NAME')
   .default('keycloak.topic')
   .asString();
 
-export const amqpConfig: AmqpConfig = {
+export const amqpEventsConfig: AmqpEventsConfig = {
   connections: [
     {
       connection: {

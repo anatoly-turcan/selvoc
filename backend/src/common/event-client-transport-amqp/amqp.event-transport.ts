@@ -1,6 +1,6 @@
 import { Connection, Options, connect } from 'amqplib';
 
-import { EventConstructor, EventTransport } from '@common/event-client';
+import { CompositeEventTransport, EventConstructor } from '@common/event-client';
 
 import { AmqpEventConsumer, AmqpEventConsumerConfig } from './amqp.event-consumer';
 import { AmqpEventProducer, AmqpEventProducerConfig } from './amqp.event-producer';
@@ -38,7 +38,7 @@ export type AmqpEventTransportConfig = {
   reconnect?: ReconnectionConfig;
 };
 
-export class AmqpEventTransport extends EventTransport {
+export class AmqpEventTransport extends CompositeEventTransport {
   protected override consumers: AmqpEventConsumer[] = [];
 
   protected override producers: AmqpEventProducer[] = [];

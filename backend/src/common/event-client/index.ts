@@ -1,3 +1,4 @@
+export * from './composite.event-transport';
 export * from './decorators';
 export * from './event-client';
 export * from './event-consumer';

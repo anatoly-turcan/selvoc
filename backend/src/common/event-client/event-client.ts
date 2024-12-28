@@ -46,25 +46,39 @@ export class EventClient {
           ),
         ),
       );
+
+      this.logger.info(
+        `(${this.constructor.name}) "${transport.constructor.name}" transport initialized`,
+      );
     });
   }
 
   public async close(): Promise<void> {
-    await this.executeOnTransports((transport) => transport.close());
+    await this.executeOnTransports(async (transport) => {
+      await transport.close();
+
+      this.logger.info(
+        `(${this.constructor.name}) "${transport.constructor.name}" transport closed`,
+      );
+    });
   }
 
   public async produce(event: object): Promise<void> {
     await this.validate(event);
 
-    await this.executeOnTransports((transport) =>
-      transport.canProduce(event.constructor as EventConstructor)
-        ? transport.produce(event)
-        : undefined,
-    );
+    await this.executeOnTransports(async (transport) => {
+      if (transport.canProduce(event.constructor as EventConstructor)) {
+        this.logger.debug(
+          `(${this.constructor.name}) producing "${getEventKey(event)}" event with "${transport.constructor.name}" transport`,
+        );
+
+        await transport.produce(event);
+      }
+    });
   }
 
   protected async executeOnTransports(
-    callback: (transport: EventTransport) => Promise<void> | undefined,
+    callback: (transport: EventTransport) => Promise<void> | void,
   ): Promise<void> {
     await Promise.all(this.transports.map(callback));
   }
@@ -91,6 +105,10 @@ export class EventClient {
     const event = this.transform(eventConstructor, payload);
 
     await this.validate(event);
+
+    this.logger.debug(
+      `(${this.constructor.name}) distributing "${getEventKey(event)}" event to listeners`,
+    );
 
     this.distributor.distribute(event);
   }
