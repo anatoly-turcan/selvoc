@@ -7,6 +7,7 @@ import {
   UserRegisteredKeycloakEvent,
   UserUpdatedAdminKeycloakEvent,
 } from '@common/events';
+import { PinoLogger } from '@common/nest-logger-pino';
 
 import { User } from '../../domain';
 import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from '../constants';
@@ -16,17 +17,22 @@ import { IUserRepository } from '../repositories';
 @Injectable()
 @EventInterceptor()
 export class UserSyncService {
+  private readonly logger: PinoLogger;
+
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly users: IUserRepository,
     @Inject(KEYCLOAK_USER_CLIENT_TOKEN)
     private readonly keycloakUserClient: IKeycloakUserClient,
-  ) {}
+    loggerService: PinoLogger,
+  ) {
+    this.logger = loggerService.child(UserSyncService.name);
+  }
 
   public async sync(userId: string): Promise<void> {
     const keycloakUser = await this.keycloakUserClient.findById(userId);
     if (!keycloakUser) {
-      console.log('Missing keycloak user');
+      this.logger.warn('Missing keycloak user', { userId });
 
       return;
     }

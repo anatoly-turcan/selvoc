@@ -47,9 +47,7 @@ export class EventClient {
         ),
       );
 
-      this.logger.info(
-        `(${this.constructor.name}) "${transport.constructor.name}" transport initialized`,
-      );
+      this.logger.info(`${transport.constructor.name} transport initialized`);
     });
   }
 
@@ -57,9 +55,7 @@ export class EventClient {
     await this.executeOnTransports(async (transport) => {
       await transport.close();
 
-      this.logger.info(
-        `(${this.constructor.name}) "${transport.constructor.name}" transport closed`,
-      );
+      this.logger.info(`${transport.constructor.name} transport closed`);
     });
   }
 
@@ -69,7 +65,7 @@ export class EventClient {
     await this.executeOnTransports(async (transport) => {
       if (transport.canProduce(event.constructor as EventConstructor)) {
         this.logger.debug(
-          `(${this.constructor.name}) producing "${getEventKey(event)}" event with "${transport.constructor.name}" transport`,
+          `Producing '${getEventKey(event)}' event with ${transport.constructor.name} transport`,
         );
 
         await transport.produce(event);
@@ -97,7 +93,7 @@ export class EventClient {
   protected async onRawEvent(key: string, payload: string | object): Promise<void> {
     const eventConstructor = getEventConstructor(key);
     if (!eventConstructor) {
-      this.logger.debug(`Missing event constructor for "${key}"`);
+      this.logger.debug(`Missing event constructor for '${key}'`);
 
       return;
     }
@@ -106,9 +102,7 @@ export class EventClient {
 
     await this.validate(event);
 
-    this.logger.debug(
-      `(${this.constructor.name}) distributing "${getEventKey(event)}" event to listeners`,
-    );
+    this.logger.debug(`Distributing '${key}' event to the listeners`);
 
     this.distributor.distribute(event);
   }
