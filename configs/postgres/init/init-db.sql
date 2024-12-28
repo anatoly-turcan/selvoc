@@ -9,3 +9,6 @@ GRANT USAGE, CREATE ON SCHEMA public TO keycloak;
 CREATE DATABASE "user";
 CREATE DATABASE "chat";
 CREATE DATABASE "vocabulary";
+
+-- kong gateway
+CREATE DATABASE "kong";
