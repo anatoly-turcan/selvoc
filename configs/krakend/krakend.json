@@ -1,0 +1,105 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "extra_config": {
+    "router": {
+      "auto_options": true
+    },
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true,
+      "format": "default",
+      "syslog_facility": "local3"
+    },
+    "telemetry/metrics": {
+      "collection_time": "60s",
+      "proxy_disabled": false,
+      "router_disabled": false,
+      "backend_disabled": false,
+      "endpoint_disabled": false,
+      "listen_address": ":8090"
+    },
+    "security/cors": {
+      "allow_origins": ["*"],
+      "expose_headers": ["Content-Length"],
+      "max_age": "12h",
+      "allow_methods": [
+        "GET",
+        "HEAD",
+        "POST",
+        "PUT",
+        "DELETE",
+        "OPTIONS",
+        "PATCH"
+      ],
+      "allow_credentials": true
+    }
+  },
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "echo_endpoint": true,
+  "debug_endpoint": true,
+  "endpoints": [
+    {
+      "endpoint": "/api/graphql",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "disable_jwk_security": true,
+          "jwk_url": "http://keycloak:5555/realms/bobo/protocol/openid-connect/certs",
+          "propagate_claims": [["sub", "x-actor-id"]]
+        }
+      },
+      "input_headers": ["*"],
+      "input_query_strings": ["*"],
+      "backend": [
+        {
+          "url_pattern": "/api/graphql",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "POST",
+          "host": ["host.docker.internal:3000"],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+
+    {
+      "endpoint": "/graphql",
+      "method": "GET",
+      "input_headers": ["Content-Type", "Accept"],
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "host": ["host.docker.internal:3000"],
+          "url_pattern": "/api/graphql"
+        }
+      ]
+    },
+    {
+      "endpoint": "/graphql",
+      "method": "POST",
+      "input_query_strings": ["query", "operationName", "variables"],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "disable_jwk_security": true,
+          "jwk_url": "http://keycloak:5555/realms/bobo/protocol/openid-connect/certs",
+          "propagate_claims": [["sub", "x-actor-id"]]
+        }
+      },
+      "backend": [
+        {
+          "host": ["host.docker.internal:3000"],
+          "url_pattern": "/api/graphql"
+        }
+      ]
+    }
+  ]
+}

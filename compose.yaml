@@ -68,6 +68,15 @@ services:
       - ./configs/keycloak/import:/opt/keycloak/data/import
       - ./configs/keycloak/providers:/opt/keycloak/providers
 
+  krakend:
+    image: devopsfaith/krakend:2.8
+    ports:
+      - ${KRAKEND_PORT:-5556}:8080
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./configs/krakend:/etc/krakend
+
 volumes:
   postgres_data:
   rabbitmq_data:
