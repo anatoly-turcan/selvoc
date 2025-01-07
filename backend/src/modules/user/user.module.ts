@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CommonConfig } from '@common/infrastructure/config/common.config';
-import { NestKeycloakAdminClientModule } from '@common/nest-keycloak-admin-client';
+import { KeycloakAdminClientModule } from '@common/nest-keycloak-admin-client';
 
 import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from './application/constants';
 import { UserService, UserSyncService } from './application/services';
@@ -14,7 +14,7 @@ import { FullUserResolver, UserResolver } from './interfaces/graphql';
 @Module({
   imports: [
     ConfigModule,
-    NestKeycloakAdminClientModule.forRootAsync({
+    KeycloakAdminClientModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<CommonConfig, true>) => {

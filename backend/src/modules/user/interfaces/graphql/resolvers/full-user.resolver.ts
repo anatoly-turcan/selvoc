@@ -1,5 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 
+import { Actor, RequestActor } from '@common/nest-auth';
 import { UserService } from '@modules/user/application/services';
 
 import { FullUserResponseGqlDto } from '../dtos/responses';
@@ -9,8 +10,8 @@ export class FullUserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => FullUserResponseGqlDto, { name: 'me' })
-  public async getMe(): Promise<FullUserResponseGqlDto> {
-    const user = await this.userService.getById('64c4e6fc-f286-4d41-aa7e-6155b908bfb4');
+  public async getMe(@Actor() actor: RequestActor): Promise<FullUserResponseGqlDto> {
+    const user = await this.userService.getById(actor.id);
 
     return new FullUserResponseGqlDto(user);
   }

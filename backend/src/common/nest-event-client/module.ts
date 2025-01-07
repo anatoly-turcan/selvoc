@@ -10,4 +10,4 @@ import { NestEventClient } from './nest-event-client';
   providers: [{ provide: EventClient, useClass: NestEventClient }],
   exports: [EventClient],
 })
-export class NestEventClientModule extends ConfigurableModuleClass {}
+export class EventClientModule extends ConfigurableModuleClass {}

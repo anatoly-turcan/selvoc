@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
+import { AuthGuard } from '@common/nest-auth';
 import { PinoLogger } from '@common/nest-logger-pino';
 
 import { AppModule } from './app.module';
@@ -15,6 +16,8 @@ async function bootstrap(): Promise<void> {
       transform: true,
     }),
   );
+
+  app.useGlobalGuards(new AuthGuard());
 
   app.enableShutdownHooks();
 

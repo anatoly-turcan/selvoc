@@ -1,2 +1,2 @@
-export { NestKeycloakAdminClientModule } from './module';
-export { NestKeycloakAdminClientModuleOptions } from './types';
+export { KeycloakAdminClientModule } from './module';
+export { KeycloakAdminClientModuleOptions } from './types';

@@ -8,4 +8,4 @@ import { PinoLogger } from './pino-logger';
   providers: [PinoLogger],
   exports: [PinoLogger],
 })
-export class NestPinoLoggerModule extends ConfigurableModuleClass {}
+export class PinoLoggerModule extends ConfigurableModuleClass {}

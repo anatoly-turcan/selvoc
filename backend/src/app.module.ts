@@ -11,8 +11,9 @@ import { EventClient } from '@common/event-client';
 import { AmqpEventTransport } from '@common/event-client-transport-amqp';
 import { MemoryEventTransport } from '@common/event-client-transport-memory';
 import { CommonConfig, loadCommonConfig } from '@common/infrastructure/config/common.config';
-import { NestEventClientModule } from '@common/nest-event-client';
-import { NestPinoLoggerModule, PinoLogger } from '@common/nest-logger-pino';
+import { AuthModule } from '@common/nest-auth';
+import { EventClientModule } from '@common/nest-event-client';
+import { PinoLogger, PinoLoggerModule } from '@common/nest-logger-pino';
 import { ChatModule } from '@modules/chat/chat.module';
 
 import { UserModule } from './modules/user/user.module';
@@ -30,7 +31,7 @@ import { UserModule } from './modules/user/user.module';
         autoLoadEntities: true,
       }),
     }),
-    NestPinoLoggerModule.forRootAsync({
+    PinoLoggerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<CommonConfig, true>) =>
@@ -50,7 +51,7 @@ import { UserModule } from './modules/user/user.module';
         'graphql-ws': true,
       },
     }),
-    NestEventClientModule.forRootAsync({
+    EventClientModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService, PinoLogger],
       useFactory: (configService: ConfigService<CommonConfig, true>, logger: PinoLogger) => ({
@@ -60,6 +61,12 @@ import { UserModule } from './modules/user/user.module';
         ],
         logger: logger.child(EventClient.name),
       }),
+    }),
+    AuthModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<CommonConfig, true>) =>
+        configService.get('auth', { infer: true }),
     }),
     UserModule,
     ChatModule,

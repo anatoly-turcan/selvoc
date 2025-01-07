@@ -2,14 +2,14 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { Module } from '@nestjs/common';
 
 import { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } from './module-definition';
-import { NestKeycloakAdminClientModuleOptions } from './types';
+import { KeycloakAdminClientModuleOptions } from './types';
 
 @Module({
   providers: [
     {
       provide: KeycloakAdminClient,
       inject: [MODULE_OPTIONS_TOKEN],
-      useFactory: async (options: NestKeycloakAdminClientModuleOptions) => {
+      useFactory: async (options: KeycloakAdminClientModuleOptions) => {
         const client = new KeycloakAdminClient(options.connection);
 
         await client.auth(options.credentials);
@@ -20,4 +20,4 @@ import { NestKeycloakAdminClientModuleOptions } from './types';
   ],
   exports: [KeycloakAdminClient],
 })
-export class NestKeycloakAdminClientModule extends ConfigurableModuleClass {}
+export class KeycloakAdminClientModule extends ConfigurableModuleClass {}

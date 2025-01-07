@@ -1,8 +1,8 @@
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 
-import { NestKeycloakAdminClientModuleOptions } from './types';
+import { KeycloakAdminClientModuleOptions } from './types';
 
 export const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
-  new ConfigurableModuleBuilder<NestKeycloakAdminClientModuleOptions>()
+  new ConfigurableModuleBuilder<KeycloakAdminClientModuleOptions>()
     .setClassMethodName('forRoot')
     .build();
