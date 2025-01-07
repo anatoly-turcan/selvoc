@@ -3,7 +3,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { PubSubAsyncIterableIterator } from 'graphql-subscriptions/dist/pubsub-async-iterable-iterator';
 
 import { EventInterceptor, EventListener, getEventKey } from '@common/event-client';
-import { Actor, RequestActor } from '@common/nest-auth';
+import { Actor, getRequestActorFromGqlContext, RequestActor } from '@common/nest-auth';
 import { ChatService } from '@modules/chat/application/services';
 import { ChatMessageCreatedEvent } from '@modules/chat/domain/events';
 
@@ -74,6 +74,17 @@ export class ChatResolver {
 
   @Subscription(() => ChatMessageCreatedGqlEvent, {
     name: ChatMessageCreatedGqlEvent.SUBSCRIPTION_NAME,
+    filter(
+      this: ChatResolver,
+      payload: { [ChatMessageCreatedGqlEvent.SUBSCRIPTION_NAME]: ChatMessageCreatedGqlEvent },
+      variables,
+      context,
+    ) {
+      const actor = getRequestActorFromGqlContext(context)!;
+      const { chatId } = payload[ChatMessageCreatedGqlEvent.SUBSCRIPTION_NAME];
+
+      return this.chatService.shouldNotifyUser(chatId, actor.id);
+    },
   })
   public onChatMessageCreated(): PubSubAsyncIterableIterator<unknown> {
     return this.pubSub.asyncIterableIterator(getEventKey(ChatMessageCreatedEvent));

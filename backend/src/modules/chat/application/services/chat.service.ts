@@ -76,8 +76,8 @@ export class ChatService {
     await this.events.produce(ChatMessageCreatedEvent.fromMessage(message));
   }
 
-  public async shouldNotifyUser(params: ShouldNotifyChatUserParams): Promise<boolean> {
-    return this.isMember(params.chatId, params.userId);
+  public async shouldNotifyUser(chatId: string, userId: string): Promise<boolean> {
+    return this.isMember(chatId, userId);
   }
 
   public async getAllByUserId(userId: string): Promise<Chat[]> {

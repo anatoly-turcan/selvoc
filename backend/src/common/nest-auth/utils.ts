@@ -9,7 +9,15 @@ export function getRequestFromContext(ctx: ExecutionContext): any {
   }
 
   if (contextType === 'graphql') {
-    return GqlExecutionContext.create(ctx).getContext().req;
+    const { req } = GqlExecutionContext.create(ctx).getContext();
+
+    // NOTE: required for graphql subscription auth
+    // TODO: find a better way?
+    if (req.subscriptions && !req.headers && req.connectionParams?.Authorization) {
+      req.headers = { authorization: req.connectionParams.Authorization };
+    }
+
+    return req;
   }
 
   throw new Error(`Unsupported context type: ${contextType}`);
