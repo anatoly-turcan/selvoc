@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { validate, ValidatorOptions } from 'class-validator';
 
 import { getEventConstructor, getEventKey } from './decorators';
@@ -7,6 +7,7 @@ import { EventTransport } from './event-transport';
 import { EventValidationException } from './exception';
 import { EventLogger } from './logger.interface';
 import { EventConstructor } from './types';
+import { stringifyPossibleError } from './utils';
 
 export type ValidationParams = { options: ValidatorOptions };
 
@@ -30,7 +31,9 @@ export class EventClient {
     this.logger = params.logger;
     this.validation = params.validation;
 
-    this.distributor.on('error', (error: unknown) => this.logger.error(JSON.stringify(error)));
+    this.distributor.on('error', (error: unknown) =>
+      this.logger.error(stringifyPossibleError(error)),
+    );
   }
 
   public async init(): Promise<void> {
@@ -39,13 +42,7 @@ export class EventClient {
 
       await transport.init();
 
-      transport.subscribe((key, payload) =>
-        this.onRawEvent(key, payload).catch((reason) =>
-          this.logger.error(
-            `Failed to handle raw event (${key}), reason: ${JSON.stringify(reason)}`,
-          ),
-        ),
-      );
+      transport.subscribe((key, payload) => this.onRawEvent(key, payload, transport));
 
       this.logger.info(`${transport.constructor.name} transport initialized`);
     });
@@ -90,25 +87,35 @@ export class EventClient {
     }
   }
 
-  protected async onRawEvent(key: string, payload: string | object): Promise<void> {
-    const eventConstructor = getEventConstructor(key);
-    if (!eventConstructor) {
-      this.logger.debug(`Missing event constructor for '${key}'`);
+  protected async onRawEvent(
+    key: string,
+    payload: string | object,
+    transport: EventTransport,
+  ): Promise<void> {
+    try {
+      const eventConstructor = getEventConstructor(key);
+      if (!eventConstructor) {
+        this.logger.debug(`Missing event constructor for '${key}'`);
 
-      return;
+        return;
+      }
+
+      const event = this.transform(eventConstructor, payload);
+
+      await this.validate(event);
+
+      this.logger.debug(`Distributing '${key}' event to the listeners`);
+
+      this.distributor.distribute(event);
+    } catch (error) {
+      this.logger.error(
+        `Failed to handle raw event '${key}' from ${transport.constructor.name} transport, reason: ${stringifyPossibleError(error)}`,
+      );
     }
-
-    const event = this.transform(eventConstructor, payload);
-
-    await this.validate(event);
-
-    this.logger.debug(`Distributing '${key}' event to the listeners`);
-
-    this.distributor.distribute(event);
   }
 
   protected transform(eventConstructor: EventConstructor, payload: string | object): object {
-    return plainToClass(
+    return plainToInstance(
       eventConstructor,
       typeof payload === 'string' ? JSON.parse(payload) : payload,
     ) as object;

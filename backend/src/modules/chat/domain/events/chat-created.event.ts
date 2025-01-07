@@ -9,13 +9,17 @@ import { Chat } from '../entities';
 export class ChatCreatedEvent {
   @IsString()
   @IsNotEmpty()
-  public readonly chatId: string;
+  public chatId: string;
 
-  constructor(chatId: string) {
-    this.chatId = chatId;
+  public static build(chatId: string): ChatCreatedEvent {
+    const event = new ChatCreatedEvent();
+
+    event.chatId = chatId;
+
+    return event;
   }
 
   public static fromChat(chat: Chat): ChatCreatedEvent {
-    return new ChatCreatedEvent(chat.id);
+    return this.build(chat.id);
   }
 }

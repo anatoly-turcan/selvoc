@@ -8,18 +8,22 @@ import { ChatMembership } from '../entities';
 export class ChatMemberJoinedEvent {
   @IsString()
   @IsNotEmpty()
-  public readonly chatId: string;
+  public chatId: string;
 
   @IsString()
   @IsNotEmpty()
-  public readonly userId: string;
+  public userId: string;
 
-  constructor(chatId: string, userId: string) {
-    this.chatId = chatId;
-    this.userId = userId;
+  public static build(chatId: string, userId: string): ChatMemberJoinedEvent {
+    const event = new ChatMemberJoinedEvent();
+
+    event.chatId = chatId;
+    event.userId = userId;
+
+    return event;
   }
 
   public static fromMembership(membership: ChatMembership): ChatMemberJoinedEvent {
-    return new ChatMemberJoinedEvent(membership.chatId, membership.userId);
+    return this.build(membership.chatId, membership.userId);
   }
 }
