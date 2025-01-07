@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AccessDeniedException } from '@common/application/exceptions';
-import { EventClient } from '@common/event-client';
+import { EventClient, EventInterceptor, EventListener } from '@common/event-client';
 
 import { Chat, ChatMembership, ChatMessage } from '../../domain/entities';
 import { ChatMemberJoinedEvent, ChatMessageCreatedEvent } from '../../domain/events';
@@ -39,6 +39,7 @@ type AddChatMemberParams = {
 };
 
 @Injectable()
+@EventInterceptor()
 export class ChatService {
   constructor(
     @Inject(CHAT_REPOSITORY_TOKEN)
@@ -85,15 +86,24 @@ export class ChatService {
     return this.chats.findByIds(memberships.map((m) => m.chatId));
   }
 
-  public async getById(id: string, actorId: string): Promise<Chat> {
+  public async getById(id: string, actorId?: string): Promise<Chat> {
     const chat = await this.chats.findById(id);
     if (!chat) {
       throw new ChatNotFoundException();
     }
 
-    await this.assertAccess(id, actorId);
+    if (actorId) {
+      await this.assertAccess(id, actorId);
+    }
 
     return chat;
+  }
+
+  @EventListener(ChatMessageCreatedEvent)
+  public async onChatMessageCreated(event: ChatMessageCreatedEvent): Promise<void> {
+    const chat = await this.getById(event.chatId);
+
+    await this.chats.save(chat.update({ lastMessageId: event.messageId }));
   }
 
   private async addMember(params: AddChatMemberParams): Promise<ChatMembership> {

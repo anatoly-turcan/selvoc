@@ -2,6 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -21,6 +23,9 @@ export class ChatTypeormEntity {
   @Column('varchar')
   public name: string;
 
+  @Column('uuid', { nullable: true })
+  public lastMessageId: string | null;
+
   @CreateDateColumn({ type: 'timestamp with time zone' })
   public createdAt: Date;
 
@@ -33,10 +38,17 @@ export class ChatTypeormEntity {
   @OneToMany(() => ChatMessageTypeormEntity, (membership) => membership.chat)
   public messages: ChatMessageTypeormEntity[];
 
-  constructor(params?: Omit<PropertiesOf<ChatTypeormEntity>, 'memberships' | 'messages'>) {
+  @ManyToOne(() => ChatMessageTypeormEntity, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn()
+  public lastMessage: ChatMessageTypeormEntity | null;
+
+  constructor(
+    params?: Omit<PropertiesOf<ChatTypeormEntity>, 'memberships' | 'messages' | 'lastMessage'>,
+  ) {
     if (params) {
       this.id = params.id;
       this.name = params.name;
+      this.lastMessageId = params.lastMessageId;
       this.createdAt = params.createdAt;
       this.updatedAt = params.updatedAt;
     }
