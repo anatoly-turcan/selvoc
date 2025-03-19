@@ -1,6 +1,7 @@
 import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
-import { IKeycloakUserClient, KeycloakUser } from '@modules/user/application/keycloak';
 import { Injectable } from '@nestjs/common';
+
+import { IKeycloakUserClient, KeycloakUser } from '@modules/user/application/keycloak';
 
 @Injectable()
 export class KeycloakUserClient implements IKeycloakUserClient {
