@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bobo-backend
+  namespace: bobo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bobo-backend
+  template:
+    metadata:
+      labels:
+        app: bobo-backend
+    spec:
+      containers:
+        - name: bobo-backend
+          image: bobo-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_HOST
+              value: "postgres.bobo.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USERNAME
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_NAME
+              value: "user"
+            - name: POSTGRES_POOL_SIZE
+              value: "10"
+            - name: KEYCLOAK_BASE_URL
+              value: "http://keycloak.bobo.svc.cluster.local:5555"
+            - name: KEYCLOAK_REALM
+              value: "bobo"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "user-service"
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: "SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u"
+            - name: AMQP_PROTOCOL
+              value: "amqp"
+            - name: AMQP_HOSTNAME
+              value: "rabbitmq.bobo.svc.cluster.local"
+            - name: AMQP_USERNAME
+              value: "guest"
+            - name: AMQP_PASSWORD
+              value: "guest"
+            - name: AMQP_PORT
+              value: "5672"
+            - name: LOGGER_LEVEL
+              value: "debug"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bobo-backend
+  namespace: bobo
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: bobo-backend
