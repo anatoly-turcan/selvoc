@@ -44,9 +44,10 @@ spec:
           readinessProbe:
             exec:
               command: ["rabbitmqctl", "status"]
-            initialDelaySeconds: 60
-            periodSeconds: 5
-            timeoutSeconds: 5
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 3
 
           resources:
             requests:

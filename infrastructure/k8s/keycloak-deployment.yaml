@@ -134,8 +134,10 @@ spec:
           readinessProbe:
             tcpSocket: # TODO: make health check
               port: 5555
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 3
+            periodSeconds: 1
+            timeoutSeconds: 1
+            failureThreshold: 3
 
           resources:
             requests:
