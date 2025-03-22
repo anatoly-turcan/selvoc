@@ -22,7 +22,10 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: postgres-password
           volumeMounts:
             - name: init-scripts
               mountPath: /docker-entrypoint-initdb.d

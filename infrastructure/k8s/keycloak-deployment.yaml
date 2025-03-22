@@ -26,13 +26,19 @@ spec:
             - name: KEYCLOAK_ADMIN
               value: "admin"
             - name: KEYCLOAK_ADMIN_PASSWORD
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: keycloak-admin-password
             - name: KC_DB
               value: "postgres"
             - name: KC_DB_USERNAME
               value: "postgres"
             - name: KC_DB_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: postgres-password
             - name: KC_DB_URL_HOST
               value: "postgres.bobo.svc.cluster.local"
             - name: KC_DB_URL_PORT
@@ -56,9 +62,15 @@ spec:
             - name: KK_TO_RMQ_EXCHANGE
               value: "keycloak.topic"
             - name: KK_TO_RMQ_USERNAME
-              value: "guest"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-username
             - name: KK_TO_RMQ_PASSWORD
-              value: "guest"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-password
           readinessProbe:
             tcpSocket: # TODO: make health check
               port: 5555

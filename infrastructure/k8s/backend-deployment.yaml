@@ -27,7 +27,10 @@ spec:
             - name: POSTGRES_USERNAME
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: postgres-password
             - name: POSTGRES_NAME
               value: "user"
             - name: POSTGRES_POOL_SIZE
@@ -39,15 +42,24 @@ spec:
             - name: KEYCLOAK_CLIENT_ID
               value: "user-service"
             - name: KEYCLOAK_CLIENT_SECRET
-              value: "SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: keycloak-client-secret
             - name: AMQP_PROTOCOL
               value: "amqp"
             - name: AMQP_HOSTNAME
               value: "rabbitmq.bobo.svc.cluster.local"
             - name: AMQP_USERNAME
-              value: "guest"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-username
             - name: AMQP_PASSWORD
-              value: "guest"
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-password
             - name: AMQP_PORT
               value: "5672"
             - name: LOGGER_LEVEL

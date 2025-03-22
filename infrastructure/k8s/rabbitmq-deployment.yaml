@@ -19,6 +19,17 @@ spec:
           ports:
             - containerPort: 5672
             - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-username
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: bobo-secrets
+                  key: rabbitmq-password
           readinessProbe:
             exec:
               command: ["rabbitmqctl", "status"]
