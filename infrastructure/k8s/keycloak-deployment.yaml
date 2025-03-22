@@ -24,53 +24,113 @@ spec:
             - containerPort: 9000
           env:
             - name: KEYCLOAK_ADMIN
-              value: "admin"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: admin
+
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: keycloak-admin-password
+
             - name: KC_DB
-              value: "postgres"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: db
+
             - name: KC_DB_USERNAME
-              value: "postgres"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: username
+
             - name: KC_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: postgres-password
+
             - name: KC_DB_URL_HOST
-              value: "postgres.bobo.svc.cluster.local"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: host
+
             - name: KC_DB_URL_PORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: port
+
             - name: KC_DB_URL_DATABASE
-              value: "keycloak"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: db-name
+
             - name: KC_HEALTH_ENABLED
-              value: "true"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: health-enabled
+
             - name: KC_METRICS_ENABLED
-              value: "true"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: metrics-enabled
+
             - name: KC_HTTP_RELATIVE_PATH
-              value: "/"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: http-relative-path
+
             - name: KC_HTTP_PORT
-              value: "5555"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: port
+
             - name: KK_TO_RMQ_URL
-              value: "rabbitmq.bobo.svc.cluster.local"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: host
+
             - name: KK_TO_RMQ_PORT
-              value: "5672"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: port
+
             - name: KK_TO_RMQ_VHOST
-              value: "/"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: vhost
+
             - name: KK_TO_RMQ_EXCHANGE
-              value: "keycloak.topic"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: rabbitmq-exchange
+
             - name: KK_TO_RMQ_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-username
+
             - name: KK_TO_RMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-password
+
           readinessProbe:
             tcpSocket: # TODO: make health check
               port: 5555

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: bobo
+data:
+  logger-level: "debug"
+  keycloak-client-id: "user-service"
+  postgres-database: "user"
+  postgres-pool-size: "10"

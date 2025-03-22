@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+  namespace: bobo
+data:
+  host: "keycloak.bobo.svc.cluster.local"
+  port: "5555"
+  base-url: "http://keycloak.bobo.svc.cluster.local:5555"
+  admin: "admin"
+  realm: "bobo"
+  db: "postgres"
+  db-name: "keycloak"
+  health-enabled: "true"
+  metrics-enabled: "true"
+  http-relative-path: "/"
+  rabbitmq-exchange: "keycloak.topic"

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: bobo
+data:
+  host: "rabbitmq.bobo.svc.cluster.local"
+  port: "5672"
+  vhost: "/"
+  protocol: "amqp"

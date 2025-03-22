@@ -21,49 +21,100 @@ spec:
             - containerPort: 3000
           env:
             - name: POSTGRES_HOST
-              value: "postgres.bobo.svc.cluster.local"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: host
+
             - name: POSTGRES_PORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: port
+
             - name: POSTGRES_USERNAME
-              value: "postgres"
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: username
+
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: postgres-password
-            - name: POSTGRES_NAME
-              value: "user"
+
+            - name: POSTGRES_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: postgres-database
+
             - name: POSTGRES_POOL_SIZE
-              value: "10"
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: postgres-pool-size
+
             - name: KEYCLOAK_BASE_URL
-              value: "http://keycloak.bobo.svc.cluster.local:5555"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: base-url
+
             - name: KEYCLOAK_REALM
-              value: "bobo"
+              valueFrom:
+                configMapKeyRef:
+                  name: keycloak-config
+                  key: realm
+
             - name: KEYCLOAK_CLIENT_ID
-              value: "user-service"
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: keycloak-client-id
+
             - name: KEYCLOAK_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
-                  key: keycloak-client-secret
+                  key: backend-keycloak-client-secret
+
             - name: AMQP_PROTOCOL
-              value: "amqp"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: protocol
+
             - name: AMQP_HOSTNAME
-              value: "rabbitmq.bobo.svc.cluster.local"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: host
+
             - name: AMQP_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-username
+
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-password
+
             - name: AMQP_PORT
-              value: "5672"
+              valueFrom:
+                configMapKeyRef:
+                  name: rabbitmq-config
+                  key: port
+
             - name: LOGGER_LEVEL
-              value: "debug"
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: logger-level
 ---
 apiVersion: v1
 kind: Service
