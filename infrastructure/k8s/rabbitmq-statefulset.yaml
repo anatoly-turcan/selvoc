@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: rabbitmq
   namespace: bobo
 spec:
+  serviceName: rabbitmq-headless
   replicas: 1
   selector:
     matchLabels:
@@ -30,19 +31,47 @@ spec:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-password
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: RABBITMQ_NODENAME
+              value: "rabbit@$(POD_NAME)"
           readinessProbe:
             exec:
               command: ["rabbitmqctl", "status"]
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 5
           volumeMounts:
             - name: data
               mountPath: /var/lib/rabbitmq
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: rabbitmq-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  namespace: bobo
+spec:
+  clusterIP: None
+  selector:
+    app: rabbitmq
+  ports:
+    - port: 5672
+      name: amqp
+    - port: 4369
+      name: epmd
+    - port: 25672
+      name: clustering
 ---
 apiVersion: v1
 kind: Service
@@ -59,15 +88,3 @@ spec:
       name: management
   selector:
     app: rabbitmq
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: rabbitmq-pvc
-  namespace: bobo
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
