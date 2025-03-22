@@ -26,23 +26,36 @@ spec:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-username
+
             - name: RABBITMQ_DEFAULT_PASS
               valueFrom:
                 secretKeyRef:
                   name: bobo-secrets
                   key: rabbitmq-password
+
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+
             - name: RABBITMQ_NODENAME
               value: "rabbit@$(POD_NAME)"
+
           readinessProbe:
             exec:
               command: ["rabbitmqctl", "status"]
             initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 5
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+
           volumeMounts:
             - name: data
               mountPath: /var/lib/rabbitmq
