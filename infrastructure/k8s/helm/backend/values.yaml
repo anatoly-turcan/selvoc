@@ -1,0 +1,58 @@
+replicaCount: 1
+
+image:
+  repository: bobo-backend
+  tag: latest
+  pullPolicy: Never  # Local dev
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: api.bobo.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+env:
+  - name: POSTGRES_HOST
+    value: "postgres.bobo.svc.cluster.local"
+  - name: POSTGRES_PORT
+    value: "5432"
+  - name: POSTGRES_DATABASE
+    value: "user"
+  - name: POSTGRES_POOL_SIZE
+    value: "10"
+  - name: KEYCLOAK_BASE_URL
+    value: "http://keycloak.bobo.svc.cluster.local:5555"
+  - name: KEYCLOAK_REALM
+    value: "bobo"
+  - name: KEYCLOAK_CLIENT_ID
+    value: "user-service"
+  - name: AMQP_PROTOCOL
+    value: "amqp"
+  - name: AMQP_HOSTNAME
+    value: "rabbitmq.bobo.svc.cluster.local"
+  - name: AMQP_PORT
+    value: "5672"
+  - name: LOGGER_LEVEL
+    value: "debug"
+
+# Temp
+secrets:
+  postgresUsername: postgres
+  postgresPassword: postgres
+  keycloakClientSecret: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
+  rabbitmqUsername: guest
+  rabbitmqPassword: guest
