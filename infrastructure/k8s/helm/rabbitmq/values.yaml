@@ -1,0 +1,57 @@
+image:
+  registry: docker.io
+  repository: bitnami/rabbitmq
+  tag: 4.0.8-debian-12-r2
+
+architecture: standalone
+
+fullnameOverride: rabbitmq
+
+auth:
+  username: "guest"
+  existingPasswordSecret: "rabbitmq-secrets"
+  existingSecretPasswordKey: "password"
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "1"
+
+service:
+  ports:
+    amqp: 5672
+    management: 15672
+
+ingress:
+  enabled: true
+  hostname: rabbitmq.bobo.local
+  path: /
+  pathType: Prefix
+
+# NOTE: probably user is not created this way - unable to connect/health check
+# extraSecrets:
+#   rabbitmq-definition:
+#     load_definition.json: |
+#       {
+#         "exchanges": [
+#           {
+#             "name": "keycloak.topic",
+#             "type": "topic",
+#             "durable": true,
+#             "auto_delete": false,
+#             "internal": false,
+#             "arguments": {}
+#           }
+#         ]
+#       }
+
+# loadDefinition:
+#   enabled: true
+#   existingSecret: "rabbitmq-definition"
