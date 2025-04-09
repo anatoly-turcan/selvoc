@@ -39,23 +39,23 @@ spec:
           - name: KC_DB_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: postgresUsername
+                name: {{ .Values.secretsNames.postgres }}
+                key: keycloakUsername
           - name: KC_DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: postgresPassword
+                name: {{ .Values.secretsNames.postgres }}
+                key: keycloakPassword
           - name: KK_TO_RMQ_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: rabbitmqUsername
+                name: {{ .Values.secretsNames.rabbitmq }}
+                key: username
           - name: KK_TO_RMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: rabbitmqPassword
+                name: {{ .Values.secretsNames.rabbitmq }}
+                key: password
         resources:
           requests:
             memory: {{ .Values.resources.requests.memory }}

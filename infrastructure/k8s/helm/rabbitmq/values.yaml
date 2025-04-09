@@ -8,7 +8,7 @@ architecture: standalone
 fullnameOverride: rabbitmq
 
 auth:
-  username: "guest"
+  username: "user"
   existingPasswordSecret: "rabbitmq-secrets"
   existingSecretPasswordKey: "password"
 
@@ -34,24 +34,3 @@ ingress:
   hostname: rabbitmq.bobo.local
   path: /
   pathType: Prefix
-
-# NOTE: probably user is not created this way - unable to connect/health check
-# extraSecrets:
-#   rabbitmq-definition:
-#     load_definition.json: |
-#       {
-#         "exchanges": [
-#           {
-#             "name": "keycloak.topic",
-#             "type": "topic",
-#             "durable": true,
-#             "auto_delete": false,
-#             "internal": false,
-#             "arguments": {}
-#           }
-#         ]
-#       }
-
-# loadDefinition:
-#   enabled: true
-#   existingSecret: "rabbitmq-definition"

@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: bobo-keycloak
   tag: latest
-  pullPolicy: Never  # Local dev
+  pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
@@ -51,11 +51,10 @@ env:
   - name: KK_TO_RMQ_EXCHANGE
     value: "keycloak.topic"
 
-# Temp
 secrets:
-  adminUsername: admin
-  adminPassword: admin
-  postgresUsername: postgres
-  postgresPassword: postgres
-  rabbitmqUsername: guest
-  rabbitmqPassword: guest
+  adminUsername: <replace>
+  adminPassword: <replace>
+
+secretsNames:
+  postgres: "postgres-secrets"
+  rabbitmq: "rabbitmq-secrets"

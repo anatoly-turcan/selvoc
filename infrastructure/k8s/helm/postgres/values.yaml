@@ -28,18 +28,39 @@ primary:
       memory: "256Mi"
       cpu: "300m"
 
+  extraEnvVars:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: adminPassword
+    - name: KEYCLOAK_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: keycloakUsername
+    - name: KEYCLOAK_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secrets
+          key: keycloakPassword
+
   initdb:
     scripts:
-    # TODO: properly insert secrets
-      init.sql: |
-        -- keycloak
-        CREATE USER keycloak WITH ENCRYPTED PASSWORD 'keycloak';
-        CREATE DATABASE keycloak;
-        GRANT ALL ON DATABASE keycloak TO keycloak;
-        \c keycloak
-        GRANT USAGE, CREATE ON SCHEMA public TO keycloak;
+      init.sh: |
+        #!/bin/bash
+        set -e
 
-        -- databases for services
-        CREATE DATABASE "user";
-        CREATE DATABASE "chat";
-        CREATE DATABASE "vocabulary";
+        # Set PGPASSWORD to the postgres user's password
+        export PGPASSWORD=$POSTGRES_PASSWORD
+
+        # Escape single quotes in the password for SQL safety
+        ESCAPED_KEYCLOAK_PASSWORD=$(echo "$KEYCLOAK_PASSWORD" | sed "s/'/''/g")
+
+        psql -U postgres -d postgres -c "CREATE USER $KEYCLOAK_USERNAME WITH ENCRYPTED PASSWORD '$ESCAPED_KEYCLOAK_PASSWORD';"
+        psql -U postgres -d postgres -c "CREATE DATABASE keycloak;"
+        psql -U postgres -d postgres -c "GRANT ALL ON DATABASE keycloak TO keycloak;"
+        psql -U postgres -d keycloak -c "GRANT USAGE, CREATE ON SCHEMA public TO keycloak;"
+        psql -U postgres -d postgres -c "CREATE DATABASE \"user\";"
+        psql -U postgres -d postgres -c "CREATE DATABASE \"chat\";"
+        psql -U postgres -d postgres -c "CREATE DATABASE \"vocabulary\";"

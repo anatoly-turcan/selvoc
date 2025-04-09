@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: bobo-backend
   tag: latest
-  pullPolicy: Never  # Local dev
+  pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
@@ -49,10 +49,9 @@ env:
   - name: LOGGER_LEVEL
     value: "debug"
 
-# Temp
 secrets:
-  postgresUsername: postgres
-  postgresPassword: postgres
-  keycloakClientSecret: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
-  rabbitmqUsername: guest
-  rabbitmqPassword: guest
+  keycloakClientSecret: <replace-me>
+
+secretsNames:
+  postgres: "postgres-secrets"
+  rabbitmq: "rabbitmq-secrets"

@@ -27,13 +27,14 @@ spec:
           - name: POSTGRES_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: postgresUsername
+                name: {{ .Values.secretsNames.postgres }}
+                # TODO: create database user per service
+                key: adminUsername
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: postgresPassword
+                name: {{ .Values.secretsNames.postgres }}
+                key: adminPassword
           - name: KEYCLOAK_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
@@ -42,13 +43,13 @@ spec:
           - name: AMQP_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: rabbitmqUsername
+                name: {{ .Values.secretsNames.rabbitmq }}
+                key: username
           - name: AMQP_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: rabbitmqPassword
+                name: {{ .Values.secretsNames.rabbitmq }}
+                key: password
         resources:
           requests:
             memory: {{ .Values.resources.requests.memory }}
