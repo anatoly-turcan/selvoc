@@ -22,20 +22,10 @@ spec:
         ports:
           - containerPort: {{ .Values.service.port }}
         env:
-        {{- range .Values.env }}
-          - name: {{ .name }}
-            value: {{ .value | quote }}
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
         {{- end }}
-          - name: KEYCLOAK_ADMIN
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: adminUsername
-          - name: KEYCLOAK_ADMIN_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: adminPassword
           - name: KC_DB_USERNAME
             valueFrom:
               secretKeyRef:
@@ -56,6 +46,9 @@ spec:
               secretKeyRef:
                 name: {{ .Values.secretsNames.rabbitmq }}
                 key: password
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-secrets
         resources:
           requests:
             memory: {{ .Values.resources.requests.memory }}

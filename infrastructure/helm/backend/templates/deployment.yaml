@@ -20,9 +20,9 @@ spec:
         ports:
           - containerPort: {{ .Values.service.port }}
         env:
-        {{- range .Values.env }}
-          - name: {{ .name }}
-            value: {{ .value | quote }}
+        {{- range $key, $value := .Values.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
         {{- end }}
           - name: POSTGRES_USERNAME
             valueFrom:
@@ -39,7 +39,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-secrets
-                key: keycloakClientSecret
+                key: KEYCLOAK_CLIENT_SECRET
           - name: AMQP_USERNAME
             valueFrom:
               secretKeyRef:
