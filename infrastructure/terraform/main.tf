@@ -10,6 +10,16 @@ provider "helm" {
   }
 }
 
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
 module "secrets" {
   source      = "./modules/secrets"
   environment = var.environment
@@ -46,6 +56,7 @@ module "rds" {
   db_password          = module.secrets.rds_password
   environment          = var.environment
   eks_node_group_sg_id = module.eks.eks_node_group_sg_id
+  k8s_namespace        = kubernetes_namespace.bobo.metadata[0].name
 }
 
 module "mq" {
@@ -56,6 +67,7 @@ module "mq" {
   mq_password          = module.secrets.mq_password
   environment          = var.environment
   eks_node_group_sg_id = module.eks.eks_node_group_sg_id
+  k8s_namespace        = kubernetes_namespace.bobo.metadata[0].name
 }
 
 module "alb" {

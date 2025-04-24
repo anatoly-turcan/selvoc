@@ -19,3 +19,7 @@ variable "mq_username" {
 variable "mq_password" {
   type = string
 }
+
+variable "k8s_namespace" {
+  type = string
+}

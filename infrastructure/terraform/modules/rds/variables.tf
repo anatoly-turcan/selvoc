@@ -21,3 +21,7 @@ variable "db_username" {
 variable "db_password" {
   type = string
 }
+
+variable "k8s_namespace" {
+  type = string
+}

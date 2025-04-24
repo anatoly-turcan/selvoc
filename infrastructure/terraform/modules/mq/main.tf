@@ -19,14 +19,14 @@ resource "aws_mq_broker" "bobo" {
 resource "aws_security_group" "mq" {
   vpc_id = var.vpc_id
   ingress {
-    from_port       = 5672
-    to_port         = 5672
+    from_port       = 5671
+    to_port         = 5671
     protocol        = "tcp"
     security_groups = [var.eks_node_group_sg_id]
   }
   ingress {
-    from_port       = 15672
-    to_port         = 15672
+    from_port       = 15671
+    to_port         = 15671
     protocol        = "tcp"
     security_groups = [var.eks_node_group_sg_id]
   }
@@ -40,4 +40,9 @@ resource "aws_security_group" "mq" {
     Name        = "${var.environment}-bobo-mq-sg"
     Environment = var.environment
   }
+}
+
+locals {
+  endpoint = aws_mq_broker.bobo.instances[0].endpoints[0]
+  hostname = replace(local.endpoint, "/^amqps:\\/\\/|:\\d+$/", "")
 }
