@@ -8,7 +8,7 @@ resource "aws_iam_role" "alb" {
       Action    = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = {
-          "${var.oidc_url}:sub" = "system:serviceaccount:kube-system:alb-ingress-controller"
+          "${trimprefix(var.oidc_url, "https://")}:sub" = "system:serviceaccount:kube-system:alb-ingress-controller"
         }
       }
     }]

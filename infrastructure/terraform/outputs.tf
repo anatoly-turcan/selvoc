@@ -13,3 +13,19 @@ output "mq_endpoint" {
 output "kubeconfig" {
   value = module.eks.kubeconfig
 }
+
+output "ecr_keycloak_repository_url" {
+  value = module.ecr.keycloak_repository_url
+}
+
+output "ecr_backend_repository_url" {
+  value = module.ecr.backend_repository_url
+}
+
+output "route53_nameservers" {
+  value = module.route53.nameservers
+}
+
+output "route53_acm_certificate_arn" {
+  value = module.route53.acm_certificate_arn
+}

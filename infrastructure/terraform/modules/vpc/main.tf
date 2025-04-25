@@ -15,8 +15,9 @@ resource "aws_subnet" "public" {
   availability_zone       = var.azs[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name        = "${var.environment}-bobo-public-${count.index}"
-    Environment = var.environment
+    Name                     = "${var.environment}-bobo-public-${count.index}"
+    Environment              = var.environment
+    "kubernetes.io/role/elb" = "1" # https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
   }
 }
 

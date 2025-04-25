@@ -79,3 +79,8 @@ module "alb" {
   region       = var.region
   vpc_id       = module.vpc.vpc_id
 }
+
+module "route53" {
+  source      = "./modules/route53"
+  domain_name = var.domain_name
+}

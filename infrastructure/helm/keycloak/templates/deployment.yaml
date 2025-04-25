@@ -26,26 +26,6 @@ spec:
           - name: {{ $key }}
             value: {{ $value | quote }}
         {{- end }}
-          - name: KC_DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.postgres }}
-                key: keycloakUsername
-          - name: KC_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.postgres }}
-                key: keycloakPassword
-          - name: KK_TO_RMQ_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.rabbitmq }}
-                key: username
-          - name: KK_TO_RMQ_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.rabbitmq }}
-                key: password
         envFrom:
           - secretRef:
               name: {{ .Release.Name }}-secrets
@@ -58,7 +38,7 @@ spec:
             cpu: {{ .Values.resources.limits.cpu }}
         readinessProbe:
           tcpSocket: # TODO: make health check
-              port: 5555
+              port: {{ .Values.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 1
           timeoutSeconds: 1

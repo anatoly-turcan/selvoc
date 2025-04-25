@@ -32,7 +32,7 @@ resource "aws_eks_node_group" "bobo" {
 resource "aws_iam_openid_connect_provider" "eks" {
   url             = aws_eks_cluster.bobo.identity[0].oidc[0].issuer
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["06b25927c42a721631c1efd9431e648fa62e1e39"]
+  thumbprint_list = ["06b25927c42a721631c1efd9431e648fa62e1e39", "c3c07e30211ff224dc6db2086d7bbaa42929a81e"]
 }
 
 resource "aws_iam_role" "eks" {

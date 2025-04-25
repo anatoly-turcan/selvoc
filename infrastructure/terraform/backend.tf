@@ -9,12 +9,6 @@ terraform {
 
 provider "aws" {
   region = var.region
-
-  default_tags {
-    tags = {
-      Environment = var.environment
-    }
-  }
 }
 
 resource "aws_s3_bucket" "terraform_state" {
@@ -22,6 +16,9 @@ resource "aws_s3_bucket" "terraform_state" {
 
   lifecycle {
     prevent_destroy = true
+  }
+  tags = {
+    Workspace = terraform.workspace
   }
 }
 
@@ -63,6 +60,7 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 
   tags = {
-    Name = "terraform-state-lock"
+    Name      = "terraform-state-lock"
+    Workspace = terraform.workspace
   }
 }
