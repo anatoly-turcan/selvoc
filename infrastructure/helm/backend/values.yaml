@@ -39,7 +39,8 @@ env:
 
 secrets:
   KEYCLOAK_CLIENT_SECRET: <replace-me>
-
-secretsNames:
-  postgres: "postgres-secrets"
-  rabbitmq: "rabbitmq-secrets"
+  POSTGRES_USERNAME: <replace-me>
+  POSTGRES_PASSWORD: <replace-me>
+  KEYCLOAK_CLIENT_SECRET: <replace-me>
+  AMQP_USERNAME: <replace-me>
+  AMQP_PASSWORD: <replace-me>

@@ -24,32 +24,9 @@ spec:
           - name: {{ $key }}
             value: {{ $value | quote }}
         {{- end }}
-          - name: POSTGRES_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.postgres }}
-                # TODO: create database user per service
-                key: adminUsername
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.postgres }}
-                key: adminPassword
-          - name: KEYCLOAK_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Release.Name }}-secrets
-                key: KEYCLOAK_CLIENT_SECRET
-          - name: AMQP_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.rabbitmq }}
-                key: username
-          - name: AMQP_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.secretsNames.rabbitmq }}
-                key: password
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-secrets
         resources:
           requests:
             memory: {{ .Values.resources.requests.memory }}
@@ -59,7 +36,7 @@ spec:
             cpu: {{ .Values.resources.limits.cpu }}
         readinessProbe:
           tcpSocket: # TODO: add /health endpoint
-              port: 3000
+              port: {{ .Values.service.port }}
           initialDelaySeconds: 3
           periodSeconds: 1
           timeoutSeconds: 1
