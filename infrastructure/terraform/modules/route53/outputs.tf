@@ -5,3 +5,7 @@ output "nameservers" {
 output "acm_certificate_arn" {
   value = aws_acm_certificate.app.arn
 }
+
+output "external_dns_role_arn" {
+  value = aws_iam_role.external_dns.arn
+}

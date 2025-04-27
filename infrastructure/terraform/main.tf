@@ -35,12 +35,14 @@ module "vpc" {
 }
 
 module "eks" {
-  source             = "./modules/eks"
-  cluster_name       = "${var.environment}-bobo-eks"
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  environment        = var.environment
-  region             = var.region
+  source                = "./modules/eks"
+  cluster_name          = "${var.environment}-bobo-eks"
+  vpc_id                = module.vpc.vpc_id
+  private_subnet_ids    = module.vpc.private_subnet_ids
+  environment           = var.environment
+  region                = var.region
+  domain_name           = var.domain_name
+  external_dns_role_arn = module.route53.external_dns_role_arn
 }
 
 module "ecr" {
@@ -71,16 +73,18 @@ module "mq" {
 }
 
 module "alb" {
-  source       = "./modules/alb"
-  cluster_name = module.eks.cluster_name
-  oidc_arn     = module.eks.oidc_arn
-  oidc_url     = module.eks.oidc_url
-  environment  = var.environment
-  region       = var.region
-  vpc_id       = module.vpc.vpc_id
+  source           = "./modules/alb"
+  cluster_name     = module.eks.cluster_name
+  oidc_arn         = module.eks.oidc_arn
+  oidc_provider_id = module.eks.oidc_provider_id
+  environment      = var.environment
+  region           = var.region
+  vpc_id           = module.vpc.vpc_id
 }
 
 module "route53" {
-  source      = "./modules/route53"
-  domain_name = var.domain_name
+  source               = "./modules/route53"
+  domain_name          = var.domain_name
+  eks_oidc_arn         = module.eks.oidc_arn
+  eks_oidc_provider_id = module.eks.oidc_provider_id
 }

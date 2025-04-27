@@ -10,7 +10,7 @@ variable "oidc_arn" {
   type = string
 }
 
-variable "oidc_url" {
+variable "oidc_provider_id" {
   type = string
 }
 

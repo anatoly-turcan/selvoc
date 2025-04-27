@@ -22,6 +22,10 @@ output "oidc_url" {
   value = aws_eks_cluster.bobo.identity[0].oidc[0].issuer
 }
 
+output "oidc_provider_id" {
+  value = trimprefix(aws_eks_cluster.bobo.identity[0].oidc[0].issuer, "https://")
+}
+
 output "kubeconfig" {
   value = <<EOT
 apiVersion: v1
