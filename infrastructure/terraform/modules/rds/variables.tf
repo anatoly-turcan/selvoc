@@ -10,18 +10,24 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
-variable "eks_node_group_sg_id" {
+variable "ingress_security_group_ids" {
+  type = set(string)
+}
+
+variable "username" {
   type = string
 }
 
-variable "db_username" {
+variable "password" {
   type = string
 }
 
-variable "db_password" {
-  type = string
+variable "instance_class" {
+  type    = string
+  default = "db.t4g.micro"
 }
 
-variable "k8s_namespace" {
-  type = string
+variable "allocated_storage" {
+  type    = number
+  default = 20
 }

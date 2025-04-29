@@ -1,3 +1,7 @@
-output "mq_endpoint" {
+output "endpoint" {
   value = local.endpoint
+}
+
+output "hostname" {
+  value = local.hostname
 }

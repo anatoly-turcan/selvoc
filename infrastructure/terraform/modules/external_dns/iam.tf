@@ -1,4 +1,3 @@
-# modules/route53/external_dns_iam.tf
 resource "aws_iam_policy" "external_dns" {
   name = "external-dns-policy"
   policy = jsonencode({
@@ -7,7 +6,7 @@ resource "aws_iam_policy" "external_dns" {
       {
         Effect   = "Allow"
         Action   = "route53:ChangeResourceRecordSets"
-        Resource = "arn:aws:route53:::hostedzone/${aws_route53_zone.main.zone_id}"
+        Resource = "arn:aws:route53:::hostedzone/${var.route53_zone_id}"
       },
       {
         Effect   = "Allow"

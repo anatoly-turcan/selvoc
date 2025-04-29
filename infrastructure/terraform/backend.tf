@@ -7,18 +7,15 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = var.region
-}
-
 resource "aws_s3_bucket" "terraform_state" {
-  bucket_prefix = "bobo-${terraform.workspace}-terraform-state"
+  bucket_prefix = "bobo-${terraform.workspace}-terraform-state-"
+
+  tags = {
+    Workspace = terraform.workspace
+  }
 
   lifecycle {
     prevent_destroy = true
-  }
-  tags = {
-    Workspace = terraform.workspace
   }
 }
 

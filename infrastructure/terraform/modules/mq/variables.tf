@@ -10,16 +10,19 @@ variable "private_subnet_ids" {
   type = list(string)
 }
 
-variable "eks_node_group_sg_id" {}
+variable "ingress_security_group_ids" {
+  type = set(string)
+}
 
-variable "mq_username" {
+variable "username" {
   type = string
 }
 
-variable "mq_password" {
+variable "password" {
   type = string
 }
 
-variable "k8s_namespace" {
-  type = string
+variable "instance_type" {
+  type    = string
+  default = "mq.t3.micro"
 }
