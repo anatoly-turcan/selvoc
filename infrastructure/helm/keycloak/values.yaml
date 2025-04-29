@@ -1,0 +1,45 @@
+replicaCount: 1
+
+image:
+  repository: bobo-keycloak
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  host: keycloak.bobo.local
+  annotations: {}
+
+resources:
+  requests:
+    memory: "600Mi"
+    cpu: "100m"
+  limits:
+    memory: "1.5Gi"
+    cpu: "1"
+
+env:
+  KC_DB: "postgres"
+  KC_DB_URL_HOST: "postgres.bobo.svc.cluster.local"
+  KC_DB_URL_PORT: "5432"
+  KC_DB_URL_DATABASE: "keycloak"
+  KC_HEALTH_ENABLED: "true"
+  KC_METRICS_ENABLED: "true"
+  KC_HTTP_RELATIVE_PATH: "/"
+  # KC_HTTP_PORT: "5555"
+  KK_TO_RMQ_URL: "rabbitmq.bobo.svc.cluster.local"
+  KK_TO_RMQ_PORT: "5672"
+  KK_TO_RMQ_VHOST: "/"
+  KK_TO_RMQ_EXCHANGE: "keycloak.topic"
+
+secrets:
+  KEYCLOAK_ADMIN: <replace>
+  KEYCLOAK_ADMIN_PASSWORD: <replace>
+  KC_DB_USERNAME: <replace>
+  KC_DB_PASSWORD: <replace>
+  KK_TO_RMQ_USERNAME: <replace>
+  KK_TO_RMQ_PASSWORD: <replace>

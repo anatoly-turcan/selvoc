@@ -1,0 +1,36 @@
+image:
+  registry: docker.io
+  repository: bitnami/rabbitmq
+  tag: 4.0.8-debian-12-r2
+
+architecture: standalone
+
+fullnameOverride: rabbitmq
+
+auth:
+  username: "user"
+  existingPasswordSecret: "rabbitmq-secrets"
+  existingSecretPasswordKey: "password"
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "1"
+
+service:
+  ports:
+    amqp: 5672
+    management: 15672
+
+ingress:
+  enabled: true
+  hostname: rabbitmq.bobo.local
+  path: /
+  pathType: Prefix

@@ -1,0 +1,46 @@
+environment: dev
+
+image:
+  repository: bobo-backend
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  host: api.bobo.local
+  annotations: {}
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+env:
+  POSTGRES_HOST: "postgres.bobo.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DATABASE: "user"
+  POSTGRES_POOL_SIZE: "10"
+  KEYCLOAK_BASE_URL: "http://keycloak.bobo.svc.cluster.local:5555"
+  KEYCLOAK_REALM: "bobo"
+  KEYCLOAK_CLIENT_ID: "user-service"
+  AMQP_PROTOCOL: "amqp"
+  AMQP_HOSTNAME: "rabbitmq.bobo.svc.cluster.local"
+  AMQP_PORT: "5672"
+  LOGGER_LEVEL: "debug"
+
+secrets:
+  KEYCLOAK_CLIENT_SECRET: <replace-me>
+  POSTGRES_USERNAME: <replace-me>
+  POSTGRES_PASSWORD: <replace-me>
+  KEYCLOAK_CLIENT_SECRET: <replace-me>
+  AMQP_USERNAME: <replace-me>
+  AMQP_PASSWORD: <replace-me>
