@@ -3,11 +3,11 @@ output "cluster_endpoint" {
 }
 
 output "rds_endpoint" {
-  value = module.rds.rds_endpoint
+  value = module.rds.endpoint
 }
 
 output "mq_endpoint" {
-  value = module.mq.mq_endpoint
+  value = module.mq.endpoint
 }
 
 output "kubeconfig" {

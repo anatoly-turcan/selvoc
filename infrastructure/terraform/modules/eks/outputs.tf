@@ -10,8 +10,8 @@ output "cluster_name" {
   value = aws_eks_cluster.bobo.name
 }
 
-output "eks_node_group_sg_id" {
-  value = data.aws_security_group.eks_node_group.id
+output "node_group_sg_id" {
+  value = data.aws_security_group.node_group.id
 }
 
 output "oidc_arn" {

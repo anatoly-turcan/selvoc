@@ -1,25 +1,3 @@
-provider "helm" {
-  kubernetes {
-    host                   = module.eks.cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "aws"
-      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-    }
-  }
-}
-
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-  }
-}
-
 module "secrets" {
   source      = "./modules/secrets"
   environment = var.environment
@@ -27,22 +5,22 @@ module "secrets" {
 
 module "vpc" {
   source               = "./modules/vpc"
-  vpc_cidr             = var.environment == "prod" ? "10.1.0.0/16" : var.environment == "stage" ? "10.2.0.0/16" : "10.0.0.0/16"
-  public_subnet_cidrs  = var.environment == "prod" ? ["10.1.1.0/24", "10.1.2.0/24"] : var.environment == "stage" ? ["10.2.1.0/24", "10.2.2.0/24"] : ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnet_cidrs = var.environment == "prod" ? ["10.1.3.0/24", "10.1.4.0/24"] : var.environment == "stage" ? ["10.2.3.0/24", "10.2.4.0/24"] : ["10.0.3.0/24", "10.0.4.0/24"]
-  azs                  = ["${var.region}a", "${var.region}b"]
+  cidr                 = local.vpc_cidr
+  public_subnet_cidrs  = local.vpc_public_subnet_cidrs
+  private_subnet_cidrs = local.vpc_private_subnet_cidrs
+  availability_zones   = local.vpc_availability_zones
   environment          = var.environment
 }
 
 module "eks" {
-  source                = "./modules/eks"
-  cluster_name          = "${var.environment}-bobo-eks"
-  vpc_id                = module.vpc.vpc_id
-  private_subnet_ids    = module.vpc.private_subnet_ids
-  environment           = var.environment
-  region                = var.region
-  domain_name           = var.domain_name
-  external_dns_role_arn = module.route53.external_dns_role_arn
+  source             = "./modules/eks"
+  vpc_id             = module.vpc.id
+  cluster_name       = local.eks_cluster_name
+  instance_types     = local.eks_instance_types
+  scaling_config     = local.eks_scaling_config
+  private_subnet_ids = module.vpc.private_subnet_ids
+  environment        = var.environment
+  region             = var.region
 }
 
 module "ecr" {
@@ -51,40 +29,52 @@ module "ecr" {
 }
 
 module "rds" {
-  source               = "./modules/rds"
-  vpc_id               = module.vpc.vpc_id
-  private_subnet_ids   = module.vpc.private_subnet_ids
-  db_username          = module.secrets.rds_username
-  db_password          = module.secrets.rds_password
-  environment          = var.environment
-  eks_node_group_sg_id = module.eks.eks_node_group_sg_id
-  k8s_namespace        = kubernetes_namespace.bobo.metadata[0].name
+  source                     = "./modules/rds"
+  vpc_id                     = module.vpc.id
+  private_subnet_ids         = module.vpc.private_subnet_ids
+  instance_class             = local.rds_instance_class
+  allocated_storage          = local.rds_allocated_storage
+  username                   = module.secrets.rds_username
+  password                   = module.secrets.rds_password
+  environment                = var.environment
+  ingress_security_group_ids = [module.eks.node_group_sg_id]
 }
 
 module "mq" {
-  source               = "./modules/mq"
-  vpc_id               = module.vpc.vpc_id
-  private_subnet_ids   = module.vpc.private_subnet_ids
-  mq_username          = module.secrets.mq_username
-  mq_password          = module.secrets.mq_password
-  environment          = var.environment
-  eks_node_group_sg_id = module.eks.eks_node_group_sg_id
-  k8s_namespace        = kubernetes_namespace.bobo.metadata[0].name
+  source                     = "./modules/mq"
+  vpc_id                     = module.vpc.id
+  instance_type              = local.mq_instance_type
+  private_subnet_ids         = module.vpc.private_subnet_ids
+  username                   = module.secrets.mq_username
+  password                   = module.secrets.mq_password
+  environment                = var.environment
+  ingress_security_group_ids = [module.eks.node_group_sg_id]
 }
 
 module "alb" {
   source           = "./modules/alb"
+  vpc_id           = module.vpc.id
   cluster_name     = module.eks.cluster_name
   oidc_arn         = module.eks.oidc_arn
   oidc_provider_id = module.eks.oidc_provider_id
   environment      = var.environment
   region           = var.region
-  vpc_id           = module.vpc.vpc_id
 }
 
 module "route53" {
-  source               = "./modules/route53"
+  source      = "./modules/route53"
+  domain_name = var.domain_name
+}
+
+module "k8s" {
+  source      = "./modules/k8s"
+  environment = var.environment
+}
+
+module "external_dns" {
+  source               = "./modules/external_dns"
   domain_name          = var.domain_name
+  route53_zone_id      = module.route53.zone_id
   eks_oidc_arn         = module.eks.oidc_arn
   eks_oidc_provider_id = module.eks.oidc_provider_id
 }

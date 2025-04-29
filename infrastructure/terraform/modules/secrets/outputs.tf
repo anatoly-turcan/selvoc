@@ -11,7 +11,8 @@ output "rds_username" {
 }
 
 output "rds_password" {
-  value = random_password.rds.result
+  value     = random_password.rds.result
+  sensitive = true
 }
 
 output "mq_username" {
@@ -19,5 +20,6 @@ output "mq_username" {
 }
 
 output "mq_password" {
-  value = random_password.mq.result
+  value     = random_password.mq.result
+  sensitive = true
 }
