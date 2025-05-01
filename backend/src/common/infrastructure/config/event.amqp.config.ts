@@ -38,7 +38,7 @@ export const amqpEventsConfig: AmqpEventsConfig = {
               events: [
                 {
                   event: UserCreatedAdminKeycloakEvent,
-                  routingKey: `KK.EVENT.ADMIN.${keycloakConfig.realm}.SUCCESS.USER.CREATE`,
+                  routingKey: UserCreatedAdminKeycloakEvent.getRouteKey(keycloakConfig.realm),
                 },
                 {
                   event: UserUpdatedAdminKeycloakEvent,

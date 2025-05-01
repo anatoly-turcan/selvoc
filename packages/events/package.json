@@ -1,0 +1,26 @@
+{
+  "name": "@bobo/events",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Anatoly Turcan <anatoly8293@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@bobo/event-client": "^0.1.0",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@bobo/event-client": "^0.1.0"
+  },
+  "keywords": [],
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+  }
+}

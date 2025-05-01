@@ -1,0 +1,29 @@
+{
+  "name": "@bobo/event-client-transport-rabbitmq",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Anatoly Turcan <anatoly8293@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@bobo/event-client": "^0.1.0",
+    "@types/amqplib": "^0.10.5",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "amqplib": "0.10.5"
+  },
+  "peerDependencies": {
+    "@bobo/event-client": "^0.1.0"
+  },
+  "keywords": [],
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+  }
+}
