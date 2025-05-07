@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type VersionResponse {
+  """0.1.0"""
+  user: String!
+}
+
+type Query {
+  version: VersionResponse!
+  userTest1: String!
+}
