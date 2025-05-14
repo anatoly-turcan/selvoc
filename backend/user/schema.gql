@@ -1,0 +1,31 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Version {
+  id: ID!
+
+  """0.1.0"""
+  user: String!
+}
+
+type User {
+  id: String!
+  username: String!
+  firstName: String
+  lastName: String
+}
+
+type FullUser {
+  id: String!
+  username: String!
+  firstName: String
+  lastName: String
+  email: String
+}
+
+type Query {
+  version: Version!
+  user(username: String!): User
+  me: FullUser!
+}

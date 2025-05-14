@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Chat {
+  id: String!
+  name: String!
+}
+
+type Version {
+  id: ID!
+  chat: String!
+}
+
+type Query {
+  chat(id: String!): Chat
+  chats: [Chat!]!
+}
+
+type Mutation {
+  createChat(data: CreateChatInput!): Chat!
+  inviteChatMember(data: InviteChatMemberInput!): Boolean!
+  sendMessage(data: SendChatMessageInput!): Boolean! @deprecated(reason: "will be replaced with websocket gateway")
+}
+
+input CreateChatInput {
+  name: String!
+}
+
+input InviteChatMemberInput {
+  chatId: String!
+  userId: String!
+}
+
+input SendChatMessageInput {
+  chatId: String!
+  content: String!
+}
