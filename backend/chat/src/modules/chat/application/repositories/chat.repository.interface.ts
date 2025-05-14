@@ -4,7 +4,7 @@ import { Chat } from '../../domain/entities';
 
 // export type FindManyChatsParams = ChatFilterParams;
 
-export interface IChatRepository {
+export interface ChatRepository {
   save(chat: Chat): Promise<Chat>;
   exists(id: string): Promise<boolean>;
   findById(id: string): Promise<Chat | null>;

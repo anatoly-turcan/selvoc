@@ -10,11 +10,7 @@ import {
   CHAT_REPOSITORY_TOKEN,
 } from '../constants';
 import { ChatNotFoundException, UserAlreadyMemberException } from '../exceptions';
-import {
-  IChatMembershipRepository,
-  IChatMessageRepository,
-  IChatRepository,
-} from '../repositories';
+import { ChatMembershipRepository, ChatMessageRepository, ChatRepository } from '../repositories';
 
 export type CreateChatParams = {
   name: string;
@@ -42,11 +38,11 @@ type AddChatMemberParams = {
 export class ChatService {
   constructor(
     @Inject(CHAT_REPOSITORY_TOKEN)
-    private readonly chats: IChatRepository,
+    private readonly chats: ChatRepository,
     @Inject(CHAT_MEMBERSHIP_REPOSITORY_TOKEN)
-    private readonly chatMemberships: IChatMembershipRepository,
+    private readonly chatMemberships: ChatMembershipRepository,
     @Inject(CHAT_MESSAGE_REPOSITORY_TOKEN)
-    private readonly chatMessages: IChatMessageRepository,
+    private readonly chatMessages: ChatMessageRepository,
     private readonly events: EventClient,
   ) {}
 

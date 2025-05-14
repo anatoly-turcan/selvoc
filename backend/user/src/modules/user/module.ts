@@ -7,7 +7,7 @@ import { AppConfig } from '@config';
 
 import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from './application/constants';
 import { UserService, UserSyncService } from './application/services';
-import { KeycloakUserClient } from './infrastructure/keycloak';
+import { KeycloakUserClientImpl } from './infrastructure/keycloak';
 import { UserTypeormEntity, UserTypeormRepository } from './infrastructure/persistence';
 import { FullUserResolver, UserResolver } from './interfaces/graphql';
 
@@ -29,7 +29,7 @@ import { FullUserResolver, UserResolver } from './interfaces/graphql';
     }),
   ],
   providers: [
-    { provide: KEYCLOAK_USER_CLIENT_TOKEN, useClass: KeycloakUserClient },
+    { provide: KEYCLOAK_USER_CLIENT_TOKEN, useClass: KeycloakUserClientImpl },
     { provide: USER_REPOSITORY_TOKEN, useClass: UserTypeormRepository },
     UserSyncService,
     UserService,

@@ -7,6 +7,6 @@ export type KeycloakUser = {
   [key: string]: unknown;
 };
 
-export interface IKeycloakUserClient {
+export interface KeycloakUserClient {
   findById(id: string): Promise<KeycloakUser | null>;
 }

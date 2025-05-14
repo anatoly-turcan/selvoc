@@ -6,7 +6,7 @@ export type ChatMembershipFilterParams = NonNullableObject<Partial<ChatMembershi
 
 export type FindManyChatMembershipsParams = { where: ChatMembershipFilterParams };
 
-export interface IChatMembershipRepository {
+export interface ChatMembershipRepository {
   save(membership: ChatMembership): Promise<ChatMembership>;
   exists(chatId: string, userId: string): Promise<boolean>;
   findMany(params: FindManyChatMembershipsParams): Promise<ChatMembership[]>;

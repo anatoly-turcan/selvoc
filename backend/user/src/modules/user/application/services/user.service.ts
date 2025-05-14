@@ -3,13 +3,13 @@ import { NotFoundException } from '@selvoc/common';
 
 import { User } from '../../domain/entities';
 import { USER_REPOSITORY_TOKEN } from '../constants';
-import { IUserRepository } from '../repositories';
+import { UserRepository } from '../repositories';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
-    private readonly users: IUserRepository,
+    private readonly users: UserRepository,
   ) {}
 
   public async getById(id: string): Promise<User> {

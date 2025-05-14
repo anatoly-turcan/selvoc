@@ -6,7 +6,7 @@ export type UserFilterParams = NonNullableObject<Partial<Omit<User, 'keycloakDat
 
 export type FindOneUserParams = { where: UserFilterParams };
 
-export interface IUserRepository {
+export interface UserRepository {
   findOne(params: FindOneUserParams): Promise<User | null>;
   save(user: User): Promise<User>;
 }

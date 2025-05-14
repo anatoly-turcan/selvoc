@@ -9,8 +9,8 @@ import { PinoLogger } from '@selvoc/nest-logger-pino';
 
 import { User } from '../../domain/entities';
 import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from '../constants';
-import { IKeycloakUserClient } from '../keycloak';
-import { IUserRepository } from '../repositories';
+import { KeycloakUserClient } from '../keycloak';
+import { UserRepository } from '../repositories';
 
 @Injectable()
 @EventInterceptor()
@@ -19,9 +19,9 @@ export class UserSyncService {
 
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
-    private readonly users: IUserRepository,
+    private readonly users: UserRepository,
     @Inject(KEYCLOAK_USER_CLIENT_TOKEN)
-    private readonly keycloakUserClient: IKeycloakUserClient,
+    private readonly keycloakUserClient: KeycloakUserClient,
     loggerService: PinoLogger,
   ) {
     this.logger = loggerService.child(UserSyncService.name);

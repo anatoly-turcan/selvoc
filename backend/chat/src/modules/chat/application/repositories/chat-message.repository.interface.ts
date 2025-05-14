@@ -1,5 +1,5 @@
 import { ChatMessage } from '../../domain/entities';
 
-export interface IChatMessageRepository {
+export interface ChatMessageRepository {
   save(message: ChatMessage): Promise<ChatMessage>;
 }

@@ -4,13 +4,13 @@ import { Repository } from 'typeorm';
 
 import {
   FindManyChatMembershipsParams,
-  IChatMembershipRepository,
+  ChatMembershipRepository,
 } from '../../../application/repositories';
 import { ChatMembership } from '../../../domain/entities';
 import { ChatMembershipTypeormEntity } from '../entities';
 
 @Injectable()
-export class ChatMembershipTypeormRepository implements IChatMembershipRepository {
+export class ChatMembershipTypeormRepository implements ChatMembershipRepository {
   constructor(
     @InjectRepository(ChatMembershipTypeormEntity)
     private readonly memberships: Repository<ChatMembershipTypeormEntity>,
