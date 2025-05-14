@@ -65,33 +65,33 @@ services:
       - ./configs/keycloak/import:/opt/keycloak/data/import
       - ./configs/keycloak/providers:/opt/keycloak/providers
 
-  backend:
-    image: bobo-backend
-    build: backend
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DATABASE: user
-      POSTGRES_POOL_SIZE: 10
-      KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
-      KEYCLOAK_REALM: bobo
-      KEYCLOAK_CLIENT_ID: user-service
-      KEYCLOAK_CLIENT_SECRET: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
-      AMQP_PROTOCOL: amqp
-      AMQP_HOSTNAME: rabbitmq
-      AMQP_USERNAME: guest
-      AMQP_PASSWORD: guest
-      AMQP_PORT: 5672
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+  # backend:
+  #   image: bobo-backend
+  #   build: backend
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     POSTGRES_HOST: postgres
+  #     POSTGRES_PORT: 5432
+  #     POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  #     POSTGRES_DATABASE: user
+  #     POSTGRES_POOL_SIZE: 10
+  #     KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
+  #     KEYCLOAK_REALM: bobo
+  #     KEYCLOAK_CLIENT_ID: user-service
+  #     KEYCLOAK_CLIENT_SECRET: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
+  #     AMQP_PROTOCOL: amqp
+  #     AMQP_HOSTNAME: rabbitmq
+  #     AMQP_USERNAME: guest
+  #     AMQP_PASSWORD: guest
+  #     AMQP_PORT: 5672
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
 
 volumes:
   postgres_data:
