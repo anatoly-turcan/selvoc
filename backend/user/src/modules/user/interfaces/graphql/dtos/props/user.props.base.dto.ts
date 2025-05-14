@@ -9,17 +9,17 @@ import { UserPropsDto } from '../../../common/dtos/props';
 @ObjectType()
 export class UserPropsBaseGqlDto extends UserPropsDto {
   @Field()
-  public override id: string;
+  declare public id: string;
 
   @Field()
-  public override username: string;
+  declare public username: string;
 
   @Field(() => String, { nullable: true })
-  public override email: string | null;
+  declare public email: string | null;
 
   @Field(() => String, { nullable: true })
-  public override firstName: string | null;
+  declare public firstName: string | null;
 
   @Field(() => String, { nullable: true })
-  public override lastName: string | null;
+  declare public lastName: string | null;
 }

@@ -9,7 +9,9 @@ import { KeycloakAdminClientModuleOptions } from './types';
     {
       provide: KeycloakAdminClient,
       inject: [MODULE_OPTIONS_TOKEN],
-      useFactory: async (options: KeycloakAdminClientModuleOptions) => {
+      useFactory: async (
+        options: KeycloakAdminClientModuleOptions,
+      ): Promise<KeycloakAdminClient> => {
         const client = new KeycloakAdminClient(options.connection);
 
         await client.auth(options.credentials);

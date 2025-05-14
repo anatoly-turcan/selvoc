@@ -9,8 +9,8 @@ import { ChatPropsDto } from '../../../common/dtos/props';
 @ObjectType()
 export class ChatPropsBaseGqlDto extends ChatPropsDto {
   @Field()
-  public override id: string;
+  declare public id: string;
 
   @Field()
-  public override name: string;
+  declare public name: string;
 }

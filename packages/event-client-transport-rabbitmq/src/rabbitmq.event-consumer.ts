@@ -1,11 +1,6 @@
 import { Channel, Connection, ConsumeMessage } from 'amqplib';
 
-import {
-  EventConstructor,
-  EventConsumer,
-  EventLogger,
-  getEventKey,
-} from '@selvoc/event-client';
+import { EventConstructor, EventConsumer, EventLogger, getEventKey } from '@selvoc/event-client';
 
 import { isRoutingKeyMatched } from './utils';
 
@@ -44,24 +39,16 @@ export class RabbitMqEventConsumer extends EventConsumer {
     await this.channel.checkQueue(this.config.queue);
 
     if (this.config.eventBindings) {
-      this.events = this.config.eventBindings.flatMap(
-        (binding) => binding.events,
-      );
+      this.events = this.config.eventBindings.flatMap((binding) => binding.events);
 
       await Promise.all(
-        this.config.eventBindings.map((binding) =>
-          this.bindEventsWithExchange(binding),
-        ),
+        this.config.eventBindings.map((binding) => this.bindEventsWithExchange(binding)),
       );
     }
   }
 
   public override async consume(): Promise<void> {
-    await this.channel.consume(
-      this.config.queue,
-      this.consumeMessage.bind(this),
-      { noAck: false },
-    );
+    await this.channel.consume(this.config.queue, this.consumeMessage.bind(this), { noAck: false });
   }
 
   public override async close(): Promise<void> {
@@ -90,10 +77,7 @@ export class RabbitMqEventConsumer extends EventConsumer {
     }
 
     try {
-      this.notify(
-        this.getEventKeyByRoutingKey(msg.fields.routingKey),
-        msg.content.toString(),
-      );
+      this.notify(this.getEventKeyByRoutingKey(msg.fields.routingKey), msg.content.toString());
 
       this.channel.ack(msg);
     } catch (error) {
@@ -121,13 +105,9 @@ export class RabbitMqEventConsumer extends EventConsumer {
     }
 
     const eventWithRoutingKey = this.events.find(
-      (event) =>
-        'routingKey' in event &&
-        isRoutingKeyMatched(event.routingKey, routingKey),
+      (event) => 'routingKey' in event && isRoutingKeyMatched(event.routingKey, routingKey),
     ) as RoutingKeyEvent | undefined;
 
-    return eventWithRoutingKey?.routingKey
-      ? getEventKey(eventWithRoutingKey.event)
-      : routingKey;
+    return eventWithRoutingKey?.routingKey ? getEventKey(eventWithRoutingKey.event) : routingKey;
   }
 }

@@ -1,18 +1,9 @@
 import { Connection, Options, connect } from 'amqplib';
 
-import {
-  CompositeEventTransport,
-  EventConstructor,
-} from '@selvoc/event-client';
+import { CompositeEventTransport, EventConstructor } from '@selvoc/event-client';
 
-import {
-  RabbitMqEventConsumer,
-  RabbitMqEventConsumerConfig,
-} from './rabbitmq.event-consumer';
-import {
-  RabbitMqEventProducer,
-  RabbitMqEventProducerConfig,
-} from './rabbitmq.event-producer';
+import { RabbitMqEventConsumer, RabbitMqEventConsumerConfig } from './rabbitmq.event-consumer';
+import { RabbitMqEventProducer, RabbitMqEventProducerConfig } from './rabbitmq.event-producer';
 import { retryWithExponentialBackoff } from './utils';
 
 export type RabbitMqEventTransportProducerConfig = RabbitMqEventProducerConfig & {
@@ -52,10 +43,7 @@ export class RabbitMqEventTransport extends CompositeEventTransport {
 
   protected override producers: RabbitMqEventProducer[] = [];
 
-  protected override eventProducerMap: Map<
-    EventConstructor,
-    RabbitMqEventProducer
-  > = new Map();
+  protected override eventProducerMap: Map<EventConstructor, RabbitMqEventProducer> = new Map();
 
   protected readonly connections: Connection[] = [];
 
@@ -141,12 +129,8 @@ export class RabbitMqEventTransport extends CompositeEventTransport {
     this.configureConnection(newConnection, config);
     this.replaceConnection(newConnection, oldConnection);
 
-    const consumers = this.consumers.filter(
-      (consumer) => consumer.connection === oldConnection,
-    );
-    const producers = this.producers.filter(
-      (producer) => producer.connection === oldConnection,
-    );
+    const consumers = this.consumers.filter((consumer) => consumer.connection === oldConnection);
+    const producers = this.producers.filter((producer) => producer.connection === oldConnection);
 
     await Promise.all([
       ...consumers.map((consumer) => consumer.reconnect(newConnection)),
@@ -176,11 +160,7 @@ export class RabbitMqEventTransport extends CompositeEventTransport {
     producerConfigs: RabbitMqEventTransportProducerConfig[],
   ): void {
     const producers = producerConfigs.map((config) => {
-      const producer = new RabbitMqEventProducer(
-        connection,
-        config,
-        this.logger,
-      );
+      const producer = new RabbitMqEventProducer(connection, config, this.logger);
 
       config.events.forEach((event) => this.setEventProducer(event, producer));
 
@@ -195,9 +175,7 @@ export class RabbitMqEventTransport extends CompositeEventTransport {
     config: RabbitMqEventTransportConnectionConfig,
   ): void {
     connection.on('close', (error?: Error) => {
-      this.logger.warn(
-        `(${this.constructor.name}) connection closed: ${error?.message}`,
-      );
+      this.logger.warn(`(${this.constructor.name}) connection closed: ${error?.message}`);
 
       this.reconnect(connection, config);
     });
@@ -210,17 +188,13 @@ export class RabbitMqEventTransport extends CompositeEventTransport {
     this.eventProducerMap.set(eventConstructor, producer);
   }
 
-  private replaceConnection(
-    newConnection: Connection,
-    oldConnection: Connection,
-  ): void {
+  private replaceConnection(newConnection: Connection, oldConnection: Connection): void {
     const oldConnectionIndex = this.connections.indexOf(oldConnection);
     this.connections[oldConnectionIndex] = newConnection;
   }
 
-  public static readonly DEFAULT_RECONNECTION_CONFIG: Required<ReconnectionConfig> =
-    {
-      attempts: 5,
-      maxDelayMs: 30000,
-    };
+  public static readonly DEFAULT_RECONNECTION_CONFIG: Required<ReconnectionConfig> = {
+    attempts: 5,
+    maxDelayMs: 30000,
+  };
 }

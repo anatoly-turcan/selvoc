@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2024",
+    "paths": {
+      "@modules": ["./src/modules"],
+      "@modules/*": ["./src/modules/*"],
+      "@config": ["./src/config"],
+      "@config/*": ["./src/config/*"]
+    }
+  }
+}
