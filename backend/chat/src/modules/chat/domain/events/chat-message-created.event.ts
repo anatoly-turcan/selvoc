@@ -1,5 +1,5 @@
-import { PropertiesOf, ToDate } from '@bobo/common';
-import { Event } from '@bobo/event-client';
+import { PropertiesOf, ToDate } from '@selvoc/common';
+import { Event } from '@selvoc/event-client';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 import { ChatMessage } from '../entities';

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-import { Event } from '@bobo/event-client';
+import { Event } from '@selvoc/event-client';
 
 import { getResourceIdFromResourcePath } from './utils';
 

@@ -1,8 +1,8 @@
-import { AuthGuard } from '@bobo/nest-auth';
-import { PinoLogger } from '@bobo/nest-logger-pino';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
+import { AuthGuard } from '@selvoc/nest-auth';
+import { PinoLogger } from '@selvoc/nest-logger-pino';
 
 import { AppModule } from './app.module';
 import { AppConfig } from './config';

@@ -1,7 +1,7 @@
-import { KeycloakAdminClientModule } from '@bobo/nest-keycloak-admin-client';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { KeycloakAdminClientModule } from '@selvoc/nest-keycloak-admin-client';
 
 import { AppConfig } from '@config';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@bobo/nest-keycloak-admin-client",
+  "name": "@selvoc/nest-keycloak-admin-client",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,6 +23,6 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+    "url": "git+https://github.com/anatoly-turcan/selvoc.git"
   }
 }

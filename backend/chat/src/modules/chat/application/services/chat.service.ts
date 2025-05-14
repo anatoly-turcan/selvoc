@@ -1,6 +1,6 @@
-import { AccessDeniedException } from '@bobo/common';
-import { EventClient, EventInterceptor, EventListener } from '@bobo/event-client';
 import { Inject, Injectable } from '@nestjs/common';
+import { AccessDeniedException } from '@selvoc/common';
+import { EventClient, EventInterceptor, EventListener } from '@selvoc/event-client';
 
 import { Chat, ChatMembership, ChatMessage } from '../../domain/entities';
 import { ChatMemberJoinedEvent, ChatMessageCreatedEvent } from '../../domain/events';

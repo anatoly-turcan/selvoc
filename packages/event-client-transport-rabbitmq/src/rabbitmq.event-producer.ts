@@ -1,6 +1,6 @@
 import { ConfirmChannel, Connection } from 'amqplib';
 
-import { EventLogger, EventProducer, getEventKey } from '@bobo/event-client';
+import { EventLogger, EventProducer, getEventKey } from '@selvoc/event-client';
 
 export type RabbitMqEventProducerConfig = Readonly<{
   exchange: string;

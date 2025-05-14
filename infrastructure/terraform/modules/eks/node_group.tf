@@ -1,6 +1,6 @@
-resource "aws_eks_node_group" "bobo" {
-  cluster_name    = aws_eks_cluster.bobo.name
-  node_group_name = "${var.environment}-bobo-nodes"
+resource "aws_eks_node_group" "selvoc" {
+  cluster_name    = aws_eks_cluster.selvoc.name
+  node_group_name = "${var.environment}-selvoc-nodes"
   node_role_arn   = aws_iam_role.node.arn
   subnet_ids      = var.private_subnet_ids
   instance_types  = var.instance_types
@@ -16,7 +16,7 @@ resource "aws_eks_node_group" "bobo" {
 }
 
 resource "aws_iam_role" "node" {
-  name = "${var.environment}-bobo-node-role"
+  name = "${var.environment}-selvoc-node-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -46,5 +46,5 @@ data "aws_security_group" "node_group" {
     name   = "tag:kubernetes.io/cluster/${var.cluster_name}"
     values = ["owned"]
   }
-  depends_on = [aws_eks_node_group.bobo]
+  depends_on = [aws_eks_node_group.selvoc]
 }

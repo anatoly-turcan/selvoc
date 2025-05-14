@@ -1,6 +1,6 @@
-import { Public } from '@bobo/nest-auth';
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckResult, HealthCheckService } from '@nestjs/terminus';
+import { Public } from '@selvoc/nest-auth';
 
 import { APP_VERSION } from '../../common';
 

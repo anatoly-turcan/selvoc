@@ -61,12 +61,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    volumes:
-      - ./configs/keycloak/import:/opt/keycloak/data/import
-      - ./configs/keycloak/providers:/opt/keycloak/providers
+    # volumes:
+    #   - ./configs/keycloak/import:/opt/keycloak/data/import
+    #   - ./configs/keycloak/providers:/opt/keycloak/providers
 
   # backend:
-  #   image: bobo-backend
+  #   image: selvoc-backend
   #   build: backend
   #   restart: unless-stopped
   #   ports:
@@ -79,7 +79,7 @@ services:
   #     POSTGRES_DATABASE: user
   #     POSTGRES_POOL_SIZE: 10
   #     KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
-  #     KEYCLOAK_REALM: bobo
+  #     KEYCLOAK_REALM: selvoc
   #     KEYCLOAK_CLIENT_ID: user-service
   #     KEYCLOAK_CLIENT_SECRET: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
   #     AMQP_PROTOCOL: amqp

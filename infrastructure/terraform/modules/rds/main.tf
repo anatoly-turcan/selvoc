@@ -1,5 +1,5 @@
 resource "aws_db_instance" "postgres" {
-  identifier                = "${var.environment}-bobo-postgres"
+  identifier                = "${var.environment}-selvoc-postgres"
   engine                    = "postgres"
   engine_version            = "17.4"
   instance_class            = var.instance_class
@@ -13,7 +13,7 @@ resource "aws_db_instance" "postgres" {
   multi_az                  = false
   publicly_accessible       = false
   skip_final_snapshot       = var.environment == "prod" ? false : true
-  final_snapshot_identifier = "${var.environment}-bobo-postgres-final-snapshot"
+  final_snapshot_identifier = "${var.environment}-selvoc-postgres-final-snapshot"
   backup_retention_period   = 7
   tags = {
     Environment = var.environment
@@ -21,7 +21,7 @@ resource "aws_db_instance" "postgres" {
 }
 
 resource "aws_db_subnet_group" "rds" {
-  name       = "${var.environment}-bobo-rds-subnet-group"
+  name       = "${var.environment}-selvoc-rds-subnet-group"
   subnet_ids = var.private_subnet_ids
   tags = {
     Environment = var.environment
@@ -43,7 +43,7 @@ resource "aws_security_group" "rds" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "${var.environment}-bobo-rds-sg"
+    Name        = "${var.environment}-selvoc-rds-sg"
     Environment = var.environment
   }
 }

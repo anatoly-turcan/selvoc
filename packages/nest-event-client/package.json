@@ -1,5 +1,5 @@
 {
-  "name": "@bobo/nest-event-client",
+  "name": "@selvoc/nest-event-client",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,12 +16,12 @@
   "dependencies": {},
   "peerDependencies": {
     "@nestjs/common": "^10.0.0",
-    "@bobo/event-client": "^0.1.0"
+    "@selvoc/event-client": "^0.1.0"
   },
   "keywords": [],
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+    "url": "git+https://github.com/anatoly-turcan/selvoc.git"
   }
 }

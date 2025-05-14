@@ -1,7 +1,7 @@
 environment: dev
 
 image:
-  repository: bobo-backend
+  repository: selvoc-backend
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -13,7 +13,7 @@ service:
 
 ingress:
   enabled: true
-  host: api.bobo.local
+  host: api.selvoc.local
   annotations: {}
 
 resources:
@@ -25,15 +25,15 @@ resources:
     cpu: "500m"
 
 env:
-  POSTGRES_HOST: "postgres.bobo.svc.cluster.local"
+  POSTGRES_HOST: "postgres.selvoc.svc.cluster.local"
   POSTGRES_PORT: "5432"
   POSTGRES_DATABASE: "user"
   POSTGRES_POOL_SIZE: "10"
-  KEYCLOAK_BASE_URL: "http://keycloak.bobo.svc.cluster.local:5555"
-  KEYCLOAK_REALM: "bobo"
+  KEYCLOAK_BASE_URL: "http://keycloak.selvoc.svc.cluster.local:5555"
+  KEYCLOAK_REALM: "selvoc"
   KEYCLOAK_CLIENT_ID: "user-service"
   AMQP_PROTOCOL: "amqp"
-  AMQP_HOSTNAME: "rabbitmq.bobo.svc.cluster.local"
+  AMQP_HOSTNAME: "rabbitmq.selvoc.svc.cluster.local"
   AMQP_PORT: "5672"
   LOGGER_LEVEL: "debug"
 

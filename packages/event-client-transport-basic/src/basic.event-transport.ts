@@ -3,9 +3,9 @@ import {
   EventConsumerListener,
   EventTransport,
   getEventKey,
-} from '@bobo/event-client';
+} from '@selvoc/event-client';
 
-export class MemoryEventTransport extends EventTransport {
+export class BasicEventTransport extends EventTransport {
   protected events: Set<EventConstructor>;
 
   protected listener?: EventConsumerListener;

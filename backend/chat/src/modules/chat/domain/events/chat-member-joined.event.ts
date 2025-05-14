@@ -1,4 +1,4 @@
-import { Event } from '@bobo/event-client';
+import { Event } from '@selvoc/event-client';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 import { ChatMembership } from '../entities';

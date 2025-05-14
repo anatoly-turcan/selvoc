@@ -1,4 +1,4 @@
-import { RabbitMqEventTransportConfig } from '@bobo/event-client-transport-rabbitmq';
+import { RabbitMqEventTransportConfig } from '@selvoc/event-client-transport-rabbitmq';
 import { get } from 'env-var';
 
 import { ChatMemberJoinedEvent, ChatMessageCreatedEvent } from '@modules/chat/domain/events';

@@ -1,5 +1,5 @@
-resource "kubernetes_namespace" "bobo" {
+resource "kubernetes_namespace" "selvoc" {
   metadata {
-    name = "bobo-${var.environment}"
+    name = "selvoc-${var.environment}"
   }
 }

@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
-import { EventClient } from '@bobo/event-client';
+import { EventClient } from '@selvoc/event-client';
 
 import { ConfigurableModuleClass } from './module-definition';
 import { NestEventClient } from './nest-event-client';

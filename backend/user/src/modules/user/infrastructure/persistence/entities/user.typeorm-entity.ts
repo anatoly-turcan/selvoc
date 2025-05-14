@@ -1,4 +1,4 @@
-import { PropertiesOf } from '@bobo/common';
+import { PropertiesOf } from '@selvoc/common';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 import { User, UserKeycloakData } from '../../../domain/entities';

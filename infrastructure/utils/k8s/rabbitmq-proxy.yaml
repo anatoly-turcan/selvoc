@@ -7,4 +7,4 @@ spec:
   - name: socat
     image: alpine/socat
     command: ["socat", "TCP-LISTEN:15671,fork", "TCP:rabbitmq:15671"]
-# kubectl -n bobo-dev port-forward pod/rabbitmq-proxy 15671:15671
+# kubectl -n selvoc-dev port-forward pod/rabbitmq-proxy 15671:15671

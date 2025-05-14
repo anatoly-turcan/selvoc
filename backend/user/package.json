@@ -1,5 +1,5 @@
 {
-  "name": "@bobo/user-service",
+  "name": "@selvoc/user-service",
   "version": "0.1.0",
   "description": "",
   "author": "Anatoly Turcan <anatoly8293@gmail.com>",
@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+    "url": "git+https://github.com/anatoly-turcan/selvoc.git"
   },
   "scripts": {
     "build": "nest build",
@@ -31,14 +31,14 @@
   "dependencies": {
     "@apollo/server": "^4.11.2",
     "@apollo/subgraph": "^2.10.2",
-    "@bobo/common": "^0.1.0",
-    "@bobo/event-client": "^0.1.0",
-    "@bobo/event-client-transport-rabbitmq": "^0.1.0",
-    "@bobo/events": "^0.1.0",
-    "@bobo/nest-auth": "^0.1.0",
-    "@bobo/nest-event-client": "^0.1.0",
-    "@bobo/nest-keycloak-admin-client": "^0.1.0",
-    "@bobo/nest-logger-pino": "^0.1.0",
+    "@selvoc/common": "^0.1.0",
+    "@selvoc/event-client": "^0.1.0",
+    "@selvoc/event-client-transport-rabbitmq": "^0.1.0",
+    "@selvoc/events": "^0.1.0",
+    "@selvoc/nest-auth": "^0.1.0",
+    "@selvoc/nest-event-client": "^0.1.0",
+    "@selvoc/nest-keycloak-admin-client": "^0.1.0",
+    "@selvoc/nest-logger-pino": "^0.1.0",
     "@keycloak/keycloak-admin-client": "^26.2.4",
     "@nestjs/apollo": "^12.2.2",
     "@nestjs/common": "^10.0.0",

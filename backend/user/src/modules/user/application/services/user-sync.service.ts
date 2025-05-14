@@ -1,11 +1,11 @@
-import { EventInterceptor, EventListener } from '@bobo/event-client';
+import { Inject, Injectable } from '@nestjs/common';
+import { EventInterceptor, EventListener } from '@selvoc/event-client';
 import {
   UserCreatedAdminKeycloakEvent,
   UserRegisteredKeycloakEvent,
   UserUpdatedAdminKeycloakEvent,
-} from '@bobo/events';
-import { PinoLogger } from '@bobo/nest-logger-pino';
-import { Inject, Injectable } from '@nestjs/common';
+} from '@selvoc/events';
+import { PinoLogger } from '@selvoc/nest-logger-pino';
 
 import { User } from '../../domain/entities';
 import { KEYCLOAK_USER_CLIENT_TOKEN, USER_REPOSITORY_TOKEN } from '../constants';

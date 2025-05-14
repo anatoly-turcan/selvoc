@@ -1,6 +1,6 @@
-import { PinoLogger } from '@bobo/nest-logger-pino';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { PinoLogger } from '@selvoc/nest-logger-pino';
 
 import { AppModule } from './app.module';
 import { AppConfig } from './config';

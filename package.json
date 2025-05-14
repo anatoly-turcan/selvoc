@@ -1,9 +1,17 @@
 {
-  "name": "bobo",
+  "name": "selvoc",
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*",
+      "packages/common",
+      "packages/event-client",
+      "packages/event-client-transport-basic",
+      "packages/event-client-transport-rabbitmq",
+      "packages/events",
+      "packages/nest-auth",
+      "packages/nest-event-client",
+      "packages/nest-keycloak-admin-client",
+      "packages/nest-logger-pino",
       "backend/*",
       "frontend"
     ],

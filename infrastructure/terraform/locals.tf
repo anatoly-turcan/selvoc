@@ -4,7 +4,7 @@ locals {
   vpc_private_subnet_cidrs = var.vpc_private_subnet_cidrs[var.environment]
   vpc_availability_zones   = ["${var.region}a", "${var.region}b"]
 
-  eks_cluster_name   = "${var.environment}-bobo-eks"
+  eks_cluster_name   = "${var.environment}-selvoc-eks"
   eks_instance_types = var.eks_instance_types[var.environment]
   eks_scaling_config = var.eks_scaling_configs[var.environment]
 

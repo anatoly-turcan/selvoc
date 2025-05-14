@@ -9,11 +9,11 @@ cp secretes-template.yaml secrets.yaml
 - Update `secrets.yaml` with your own values.
 
 ```bash
-kubectl apply -f secrets.yaml -n bobo
+kubectl apply -f secrets.yaml -n selvoc
 ```
 
 ## Install
 
 ```bash
-helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f values.yaml -n bobo
+helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f values.yaml -n selvoc
 ```

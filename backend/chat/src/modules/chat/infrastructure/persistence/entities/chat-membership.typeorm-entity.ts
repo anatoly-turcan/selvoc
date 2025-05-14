@@ -1,4 +1,4 @@
-import { PropertiesOf } from '@bobo/common';
+import { PropertiesOf } from '@selvoc/common';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { ChatMembership } from '../../../domain/entities';

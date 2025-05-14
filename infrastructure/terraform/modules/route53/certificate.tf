@@ -1,6 +1,6 @@
 resource "aws_acm_certificate" "app" {
   domain_name               = var.domain_name
-  subject_alternative_names = ["*.bobo.${var.domain_name}"]
+  subject_alternative_names = ["*.selvoc.${var.domain_name}"]
   validation_method         = "DNS"
 }
 

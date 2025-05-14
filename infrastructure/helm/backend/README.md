@@ -18,5 +18,5 @@ secrets:
 - Install the chart:
 
 ```bash
-helm install backend . -f local.values.yaml -n bobo
+helm install backend . -f local.values.yaml -n selvoc
 ```

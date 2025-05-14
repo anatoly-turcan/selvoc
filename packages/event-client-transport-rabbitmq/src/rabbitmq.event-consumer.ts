@@ -1,6 +1,11 @@
 import { Channel, Connection, ConsumeMessage } from 'amqplib';
 
-import { EventConstructor, EventConsumer, EventLogger, getEventKey } from '@bobo/event-client';
+import {
+  EventConstructor,
+  EventConsumer,
+  EventLogger,
+  getEventKey,
+} from '@selvoc/event-client';
 
 import { isRoutingKeyMatched } from './utils';
 

@@ -1,5 +1,5 @@
-import { Public } from '@bobo/nest-auth';
 import { Query, Resolver } from '@nestjs/graphql';
+import { Public } from '@selvoc/nest-auth';
 
 import { VersionResponse } from '../dtos/responses';
 

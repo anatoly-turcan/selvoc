@@ -1,5 +1,5 @@
-resource "aws_mq_broker" "bobo" {
-  broker_name                = "${var.environment}-bobo-mq"
+resource "aws_mq_broker" "selvoc" {
+  broker_name                = "${var.environment}-selvoc-mq"
   engine_type                = "RabbitMQ"
   engine_version             = "3.13"
   auto_minor_version_upgrade = true
@@ -37,7 +37,7 @@ resource "aws_security_group" "mq" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "${var.environment}-bobo-mq-sg"
+    Name        = "${var.environment}-selvoc-mq-sg"
     Environment = var.environment
   }
 }

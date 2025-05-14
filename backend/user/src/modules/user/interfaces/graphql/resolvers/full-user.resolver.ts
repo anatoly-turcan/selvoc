@@ -1,5 +1,5 @@
-import { Actor, RequestActor } from '@bobo/nest-auth';
 import { Query, Resolver } from '@nestjs/graphql';
+import { Actor, RequestActor } from '@selvoc/nest-auth';
 
 import { UserService } from '../../../application/services';
 import { FullUserResponseGqlDto } from '../dtos/responses';

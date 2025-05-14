@@ -1,5 +1,5 @@
 resource "aws_iam_role" "alb" {
-  name = "${var.environment}-bobo-alb-role"
+  name = "${var.environment}-selvoc-alb-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "alb" {
 }
 
 resource "aws_iam_policy" "alb" {
-  name   = "${var.environment}-bobo-alb-policy"
+  name   = "${var.environment}-selvoc-alb-policy"
   policy = file("${path.module}/policy.json")
   tags = {
     Environment = var.environment

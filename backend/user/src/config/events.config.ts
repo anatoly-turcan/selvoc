@@ -1,9 +1,9 @@
-import { RabbitMqEventTransportConfig } from '@bobo/event-client-transport-rabbitmq';
+import { RabbitMqEventTransportConfig } from '@selvoc/event-client-transport-rabbitmq';
 import {
   UserCreatedAdminKeycloakEvent,
   UserRegisteredKeycloakEvent,
   UserUpdatedAdminKeycloakEvent,
-} from '@bobo/events';
+} from '@selvoc/events';
 import { get } from 'env-var';
 
 import { keycloakConfig } from './keycloak.config';

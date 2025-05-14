@@ -1,5 +1,5 @@
 {
-  "name": "@bobo/template-service",
+  "name": "@selvoc/template-service",
   "version": "0.1.0",
   "description": "",
   "author": "Anatoly Turcan <anatoly8293@gmail.com>",
@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anatoly-turcan/bobo.git"
+    "url": "git+https://github.com/anatoly-turcan/selvoc.git"
   },
   "scripts": {
     "build": "nest build",
@@ -31,9 +31,9 @@
   "dependencies": {
     "@apollo/server": "^4.11.2",
     "@apollo/subgraph": "^2.10.2",
-    "@bobo/common": "^0.1.0",
-    "@bobo/nest-auth": "^0.1.0",
-    "@bobo/nest-logger-pino": "^0.1.0",
+    "@selvoc/common": "^0.1.0",
+    "@selvoc/nest-auth": "^0.1.0",
+    "@selvoc/nest-logger-pino": "^0.1.0",
     "@nestjs/apollo": "^12.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",

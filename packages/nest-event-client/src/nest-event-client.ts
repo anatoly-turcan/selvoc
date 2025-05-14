@@ -1,6 +1,6 @@
 import { Inject, OnApplicationBootstrap, OnApplicationShutdown } from '@nestjs/common';
 
-import { EventClient, EventClientParams } from '@bobo/event-client';
+import { EventClient, EventClientParams } from '@selvoc/event-client';
 
 import { MODULE_OPTIONS_TOKEN } from './module-definition';
 

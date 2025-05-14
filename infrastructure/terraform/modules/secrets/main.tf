@@ -23,7 +23,7 @@ resource "random_password" "mq" {
 }
 
 resource "aws_secretsmanager_secret" "rds" {
-  name                    = "${var.environment}-bobo-rds-credentials"
+  name                    = "${var.environment}-selvoc-rds-credentials"
   recovery_window_in_days = 0
   tags = {
     Environment = var.environment
@@ -39,7 +39,7 @@ resource "aws_secretsmanager_secret_version" "rds" {
 }
 
 resource "aws_secretsmanager_secret" "mq" {
-  name                    = "${var.environment}-bobo-mq-credentials"
+  name                    = "${var.environment}-selvoc-mq-credentials"
   recovery_window_in_days = 0
   tags = {
     Environment = var.environment

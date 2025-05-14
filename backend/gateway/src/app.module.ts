@@ -1,10 +1,10 @@
 import { GraphQLDataSource, IntrospectAndCompose } from '@apollo/gateway';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { PinoLoggerModule } from '@bobo/nest-logger-pino';
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { PinoLoggerModule } from '@selvoc/nest-logger-pino';
 
 import { CoreModule } from '@modules/core';
 

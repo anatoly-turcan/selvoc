@@ -5,7 +5,7 @@ resource "aws_subnet" "public" {
   availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name                     = "${var.environment}-bobo-public-${count.index}"
+    Name                     = "${var.environment}-selvoc-public-${count.index}"
     Environment              = var.environment
     "kubernetes.io/role/elb" = "1" # https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
   }
@@ -17,7 +17,7 @@ resource "aws_subnet" "private" {
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
   tags = {
-    Name        = "${var.environment}-bobo-private-${count.index}"
+    Name        = "${var.environment}-selvoc-private-${count.index}"
     Environment = var.environment
   }
 }

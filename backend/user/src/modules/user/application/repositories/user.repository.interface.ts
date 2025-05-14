@@ -1,4 +1,4 @@
-import { NonNullableObject } from '@bobo/common';
+import { NonNullableObject } from '@selvoc/common';
 
 import { User } from '../../domain/entities';
 

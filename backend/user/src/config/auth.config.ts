@@ -1,4 +1,4 @@
-import { AuthModuleOptions } from '@bobo/nest-auth';
+import { AuthModuleOptions } from '@selvoc/nest-auth';
 
 import { keycloakConfig } from './keycloak.config';
 

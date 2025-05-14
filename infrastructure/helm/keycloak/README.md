@@ -18,5 +18,5 @@ secrets:
 - Install the chart:
 
 ```bash
-helm install keycloak . -f local.values.yaml -n bobo
+helm install keycloak . -f local.values.yaml -n selvoc
 ```

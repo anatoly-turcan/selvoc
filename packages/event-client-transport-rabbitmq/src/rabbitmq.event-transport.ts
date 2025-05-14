@@ -1,6 +1,9 @@
 import { Connection, Options, connect } from 'amqplib';
 
-import { CompositeEventTransport, EventConstructor } from '@bobo/event-client';
+import {
+  CompositeEventTransport,
+  EventConstructor,
+} from '@selvoc/event-client';
 
 import {
   RabbitMqEventConsumer,

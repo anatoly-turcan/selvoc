@@ -1,4 +1,4 @@
-import { NestPinoLoggerModuleOptions } from '@bobo/nest-logger-pino';
+import { NestPinoLoggerModuleOptions } from '@selvoc/nest-logger-pino';
 import { get } from 'env-var';
 import { LevelWithSilentOrString } from 'pino';
 

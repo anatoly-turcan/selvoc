@@ -1,6 +1,6 @@
 apiVersion: v2
 name: keycloak
-description: Helm chart for Bobo keycloak
+description: Helm chart for selvoc keycloak
 
 # A chart can be either an 'application' or a 'library' chart.
 #

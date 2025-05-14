@@ -1,13 +1,13 @@
 import { join } from 'path/posix';
 
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { AuthModule } from '@bobo/nest-auth';
-import { PinoLoggerModule } from '@bobo/nest-logger-pino';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '@selvoc/nest-auth';
+import { PinoLoggerModule } from '@selvoc/nest-logger-pino';
 
 import { CoreModule } from '@modules/core';
 import { VersionResponse } from '@modules/core/interfaces/graphql/dtos/responses';

@@ -7,4 +7,4 @@ spec:
   - name: socat
     image: alpine/socat
     command: ["socat", "TCP-LISTEN:5432,fork", "TCP:postgres:5432"]
-# kubectl -n bobo-dev port-forward pod/postgres-proxy 5432:5432
+# kubectl -n selvoc-dev port-forward pod/postgres-proxy 5432:5432

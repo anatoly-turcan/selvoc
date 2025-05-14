@@ -1,16 +1,16 @@
 import { join } from 'path/posix';
 
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { EventClient } from '@bobo/event-client';
-import { RabbitMqEventTransport } from '@bobo/event-client-transport-rabbitmq';
-import { AuthModule } from '@bobo/nest-auth';
-import { EventClientModule } from '@bobo/nest-event-client';
-import { PinoLogger, PinoLoggerModule } from '@bobo/nest-logger-pino';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventClient } from '@selvoc/event-client';
+import { RabbitMqEventTransport } from '@selvoc/event-client-transport-rabbitmq';
+import { AuthModule } from '@selvoc/nest-auth';
+import { EventClientModule } from '@selvoc/nest-event-client';
+import { PinoLogger, PinoLoggerModule } from '@selvoc/nest-logger-pino';
 
 import { AppConfig, loadAppConfig } from '@config';
 import { ChatModule } from '@modules/chat';

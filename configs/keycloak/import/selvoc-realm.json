@@ -1,6 +1,6 @@
 {
   "id" : "5f71265a-abc7-4b84-9ce9-fb02a5c64190",
-  "realm" : "bobo",
+  "realm": "selvoc",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -48,7 +48,7 @@
   "roles" : {
     "realm" : [ {
       "id" : "a1bd250b-cadd-4e44-86b2-3128ef932062",
-      "name" : "default-roles-bobo",
+      "name": "default-roles-selvoc",
       "description" : "${role_default-roles}",
       "composite" : true,
       "composites" : {
@@ -338,7 +338,7 @@
   "groups" : [ ],
   "defaultRole" : {
     "id" : "a1bd250b-cadd-4e44-86b2-3128ef932062",
-    "name" : "default-roles-bobo",
+    "name": "default-roles-selvoc",
     "description" : "${role_default-roles}",
     "composite" : true,
     "clientRole" : false,
@@ -391,12 +391,14 @@
     "clientId" : "account",
     "name" : "${client_account}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/bobo/account/",
+    "baseUrl": "/realms/selvoc/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/bobo/account/*" ],
+    "redirectUris": [
+      "/realms/selvoc/account/*"
+    ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -422,12 +424,14 @@
     "clientId" : "account-console",
     "name" : "${client_account-console}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/bobo/account/",
+    "baseUrl": "/realms/selvoc/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/bobo/account/*" ],
+    "redirectUris": [
+      "/realms/selvoc/account/*"
+    ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -550,12 +554,14 @@
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
     "rootUrl" : "${authAdminUrl}",
-    "baseUrl" : "/admin/bobo/console/",
+    "baseUrl": "/admin/selvoc/console/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/admin/bobo/console/*" ],
+    "redirectUris": [
+      "/admin/selvoc/console/*"
+    ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,

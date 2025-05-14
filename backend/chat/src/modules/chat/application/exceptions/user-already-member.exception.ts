@@ -1,4 +1,4 @@
-import { BadRequestException } from '@bobo/common';
+import { BadRequestException } from '@selvoc/common';
 
 export class UserAlreadyMemberException extends BadRequestException {
   constructor() {

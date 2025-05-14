@@ -1,5 +1,5 @@
-import { NotFoundException } from '@bobo/common';
 import { Inject, Injectable } from '@nestjs/common';
+import { NotFoundException } from '@selvoc/common';
 
 import { User } from '../../domain/entities';
 import { USER_REPOSITORY_TOKEN } from '../constants';

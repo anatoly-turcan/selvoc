@@ -1,5 +1,5 @@
-import { Actor, RequestActor } from '@bobo/nest-auth';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Actor, RequestActor } from '@selvoc/nest-auth';
 
 import { ChatService } from '../../../application/services';
 import { GetChatArgs } from '../dtos/args';

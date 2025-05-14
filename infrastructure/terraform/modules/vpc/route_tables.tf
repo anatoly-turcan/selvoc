@@ -5,7 +5,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
-    Name        = "${var.environment}-bobo-public-rt"
+    Name        = "${var.environment}-selvoc-public-rt"
     Environment = var.environment
   }
 }
@@ -23,7 +23,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.nat.id
   }
   tags = {
-    Name        = "${var.environment}-bobo-private-rt"
+    Name        = "${var.environment}-selvoc-private-rt"
     Environment = var.environment
   }
 }

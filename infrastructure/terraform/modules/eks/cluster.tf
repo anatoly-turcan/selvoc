@@ -1,4 +1,4 @@
-resource "aws_eks_cluster" "bobo" {
+resource "aws_eks_cluster" "selvoc" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks.arn
   vpc_config {
@@ -12,13 +12,13 @@ resource "aws_eks_cluster" "bobo" {
 }
 
 resource "aws_iam_openid_connect_provider" "eks" {
-  url             = aws_eks_cluster.bobo.identity[0].oidc[0].issuer
+  url             = aws_eks_cluster.selvoc.identity[0].oidc[0].issuer
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = ["06b25927c42a721631c1efd9431e648fa62e1e39", "c3c07e30211ff224dc6db2086d7bbaa42929a81e"]
 }
 
 resource "aws_iam_role" "eks" {
-  name = "${var.environment}-bobo-eks-role"
+  name = "${var.environment}-selvoc-eks-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -52,7 +52,7 @@ resource "aws_security_group" "eks" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "${var.environment}-bobo-eks-sg"
+    Name        = "${var.environment}-selvoc-eks-sg"
     Environment = var.environment
   }
 }

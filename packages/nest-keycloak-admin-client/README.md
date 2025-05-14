@@ -7,7 +7,7 @@ This package provides a wrapper around the Keycloak Admin Client for use with Ne
 `@keycloak/keycloak-admin-client` is a peer dependency, so you need to install it separately.
 
 ```bash
-npm install @bobo/nest-keycloak-admin-client @keycloak/keycloak-admin-client
+npm install @selvoc/nest-keycloak-admin-client @keycloak/keycloak-admin-client
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install @bobo/nest-keycloak-admin-client @keycloak/keycloak-admin-client
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { KeycloakAdminClientModule } from '@bobo/nest-keycloak-admin-client';
+import { KeycloakAdminClientModule } from '@selvoc/nest-keycloak-admin-client';
 
 @Module({
   imports: [
