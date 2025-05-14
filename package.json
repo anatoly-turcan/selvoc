@@ -1,0 +1,14 @@
+{
+  "name": "bobo",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "backend/*",
+      "frontend"
+    ],
+    "nohoist": [
+      "**"
+    ]
+  }
+}

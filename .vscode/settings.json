@@ -1,5 +1,10 @@
 {
   "cSpell.words": [
-    "bobo"
+    "AMQP",
+    "bobo",
+    "datasource",
+    "dtos",
+    "rabbitmq",
+    "supergraph"
   ]
 }

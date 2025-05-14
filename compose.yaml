@@ -31,12 +31,10 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
 
   keycloak:
-    build:
-      context: .
-      dockerfile: configs/keycloak/Dockerfile
+    build: configs/keycloak
     restart: unless-stopped
     ports:
-      - ${KEYCLOAK_PORT:-5555}:${KEYCLOAK_PORT:-5555}
+      - ${KEYCLOAK_PORT:-8080}:8080
     environment:
       # https://www.keycloak.org/server/all-config
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
@@ -50,7 +48,6 @@ services:
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_HTTP_RELATIVE_PATH: /
-      KC_HTTP_PORT: ${KEYCLOAK_PORT:-5555}
       # Provider: https://github.com/aznamier/keycloak-event-listener-rabbitmq
       KK_TO_RMQ_URL: rabbitmq
       KK_TO_RMQ_PORT: ${RABBITMQ_PORT:-5672}
@@ -70,7 +67,8 @@ services:
 
   backend:
     image: bobo-backend
-    build: ./backend
+    build: backend
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
@@ -80,7 +78,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DATABASE: user
       POSTGRES_POOL_SIZE: 10
-      KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-5555}
+      KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
       KEYCLOAK_REALM: bobo
       KEYCLOAK_CLIENT_ID: user-service
       KEYCLOAK_CLIENT_SECRET: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
@@ -89,9 +87,11 @@ services:
       AMQP_USERNAME: guest
       AMQP_PASSWORD: guest
       AMQP_PORT: 5672
-  depends_on:
-    - postgres
-    - rabbitmq
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   postgres_data:
