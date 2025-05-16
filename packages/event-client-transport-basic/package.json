@@ -1,8 +1,11 @@
 {
   "name": "@selvoc/event-client-transport-basic",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
@@ -10,7 +13,20 @@
   "author": "Anatoly Turcan <anatoly8293@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "@selvoc/event-client": "^0.1.0"
+    "@types/jest": "^29.5.2",
+    "@types/node": "^22.15.3",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@selvoc/event-client": "^0.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.8.3"
   },
   "dependencies": {},
   "peerDependencies": {
