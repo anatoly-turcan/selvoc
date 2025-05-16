@@ -20,7 +20,7 @@ async function bootstrap(): Promise<void> {
 
   await app.listen(port, hostname);
 
-  logger.info(`Listening on ${port} (${hostname})`);
+  logger.info(`Listening on ${hostname}:${port}`);
 }
 
 bootstrap();

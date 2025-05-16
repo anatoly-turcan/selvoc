@@ -19,7 +19,7 @@ export type AppConfig = {
 export function loadAppConfig(): AppConfig {
   return {
     port: get('PORT').default('3000').asInt(),
-    hostname: get('HOSTNAME').default('0.0.0.0').asString(),
+    hostname: get('HOSTNAME').default('::').asString(),
     typeorm: typeormConfig,
     keycloak: keycloakConfig,
     logger: loggerConfig,

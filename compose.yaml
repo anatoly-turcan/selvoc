@@ -61,37 +61,98 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    # volumes:
-    #   - ./configs/keycloak/import:/opt/keycloak/data/import
-    #   - ./configs/keycloak/providers:/opt/keycloak/providers
 
-  # backend:
-  #   image: selvoc-backend
-  #   build: backend
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     POSTGRES_HOST: postgres
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-  #     POSTGRES_DATABASE: user
-  #     POSTGRES_POOL_SIZE: 10
-  #     KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
-  #     KEYCLOAK_REALM: selvoc
-  #     KEYCLOAK_CLIENT_ID: user-service
-  #     KEYCLOAK_CLIENT_SECRET: SRamNBCzZSNbiqy59uiKAQ0x3JoStm0u
-  #     AMQP_PROTOCOL: amqp
-  #     AMQP_HOSTNAME: rabbitmq
-  #     AMQP_USERNAME: guest
-  #     AMQP_PASSWORD: guest
-  #     AMQP_PORT: 5672
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
+  # Services
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: backend/gateway/Dockerfile
+      secrets:
+        - github_token
+    restart: unless-stopped
+    ports:
+      - ${GATEWAY_PORT:-3000}:3000
+    environment:
+      SUBGRAPH_USER_URL: http://user-service:3000/graphql
+      SUBGRAPH_CHAT_URL: http://chat-service:3000/graphql
+      LOGGER_LEVEL: debug
+      HOSTNAME: '::'
+    depends_on:
+      user-service:
+        condition: service_healthy
+      chat-service:
+        condition: service_healthy
+
+  user-service:
+    build:
+      context: .
+      dockerfile: backend/user/Dockerfile
+      secrets:
+        - github_token
+    restart: unless-stopped
+    ports:
+      - ${USER_PORT:-3001}:3000
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DATABASE: user
+      POSTGRES_POOL_SIZE: 10
+      KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
+      KEYCLOAK_REALM: selvoc
+      KEYCLOAK_CLIENT_ID: ${USER_KEYCLOAK_CLIENT_ID:-user-service}
+      KEYCLOAK_CLIENT_SECRET: $USER_KEYCLOAK_CLIENT_SECRET
+      RABBITMQ_PROTOCOL: amqp
+      RABBITMQ_HOSTNAME: rabbitmq
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      LOGGER_LEVEL: debug
+      HOSTNAME: '::'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: backend/chat/Dockerfile
+      secrets:
+        - github_token
+    restart: unless-stopped
+    ports:
+      - ${CHAT_PORT:-3002}:3000
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DATABASE: chat
+      POSTGRES_POOL_SIZE: 10
+      KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
+      KEYCLOAK_REALM: selvoc
+      KEYCLOAK_CLIENT_ID: ${CHAT_KEYCLOAK_CLIENT_ID:-chat-service}
+      KEYCLOAK_CLIENT_SECRET: $CHAT_KEYCLOAK_CLIENT_SECRET
+      RABBITMQ_PROTOCOL: amqp
+      RABBITMQ_HOSTNAME: rabbitmq
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      LOGGER_LEVEL: debug
+      HOSTNAME: '::'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN
 
 volumes:
   postgres_data:

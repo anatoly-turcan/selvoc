@@ -15,7 +15,7 @@ export type AppConfig = {
 export function loadAppConfig(): AppConfig {
   return {
     port: get('PORT').default('3000').asInt(),
-    hostname: get('HOSTNAME').default('0.0.0.0').asString(),
+    hostname: get('HOSTNAME').default('::').asString(),
     logger: loggerConfig,
     supergraph: {
       pollIntervalInMs: get('SUBGRAPH_POLL_INTERVAL_IN_MS').default('60000').asInt(),
