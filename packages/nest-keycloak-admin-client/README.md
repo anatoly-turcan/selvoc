@@ -1,4 +1,4 @@
-# NestJS wrapper for Keycloak Admin Client
+# Nest Keycloak Admin Client
 
 This package provides a wrapper around the Keycloak Admin Client for use with NestJS.
 
@@ -13,7 +13,6 @@ npm install @selvoc/nest-keycloak-admin-client @keycloak/keycloak-admin-client
 ## Usage
 
 ```ts
-
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
