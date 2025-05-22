@@ -1,0 +1,15 @@
+variable "environment" {
+  type = string
+}
+
+variable "project_name" {
+  type = string
+}
+
+variable "postgres_host" {
+  type = string
+}
+
+variable "rabbitmq_host" {
+  type = string
+}
