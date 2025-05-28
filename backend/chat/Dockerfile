@@ -1,8 +1,8 @@
 # Stage 1: Build
 FROM node:22-alpine AS build
 
-RUN --mount=type=secret,id=github_token \
-  npm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/github_token)
+# RUN --mount=type=secret,id=github_token \
+#   npm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/github_token)
 
 WORKDIR /app
 
@@ -12,7 +12,8 @@ COPY backend/tsconfig.json ./backend/
 
 WORKDIR /app/backend/chat
 
-COPY backend/chat/package*.json backend/chat/.npmrc ./
+# COPY backend/chat/package*.json backend/chat/.npmrc ./
+COPY backend/chat/package*.json ./
 
 RUN npm ci
 
