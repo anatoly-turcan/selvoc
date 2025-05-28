@@ -1,0 +1,10 @@
+apiVersion: v2
+
+name: postgres-proxy
+
+description: A Helm chart for Postgres proxy pod
+
+version: 0.1.0
+
+# helm install postgres-proxy ./postgres-proxy -n selvoc-dev --set postgres.host=postgres
+# kubectl -n selvoc-dev port-forward pod/postgres-proxy 5432:5432

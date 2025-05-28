@@ -1,0 +1,12 @@
+name: postgres-proxy
+
+image:
+  repository: alpine/socat
+  tag: latest
+
+proxy:
+  port: 5432
+
+postgres:
+  host: postgres
+  port: 5432
