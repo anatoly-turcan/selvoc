@@ -1,0 +1,45 @@
+ingress:
+  enabled: false
+
+env:
+  POSTGRES_PORT: 5432
+  POSTGRES_DATABASE: chat
+  POSTGRES_POOL_SIZE: 10
+
+  RABBITMQ_PORT: 5671
+  RABBITMQ_PROTOCOL: amqps
+
+  KEYCLOAK_BASE_URL: http://keycloak.selvoc-dev.svc.cluster.local:8080
+  KEYCLOAK_REALM: selvoc
+  KEYCLOAK_CLIENT_ID: chat-service
+
+  LOGGER_LEVEL: debug
+
+secrets:
+  external:
+    enabled: true
+    refreshInterval: 1h
+    data:
+      POSTGRES_HOST:
+        key: selvoc/dev/service/chat/postgres-credentials
+        property: host
+      POSTGRES_USERNAME:
+        key: selvoc/dev/service/chat/postgres-credentials
+        property: username
+      POSTGRES_PASSWORD:
+        key: selvoc/dev/service/chat/postgres-credentials
+        property: password
+
+      RABBITMQ_HOSTNAME:
+        key: selvoc/dev/service/chat/rabbitmq-credentials
+        property: host
+      RABBITMQ_USERNAME:
+        key: selvoc/dev/service/chat/rabbitmq-credentials
+        property: username
+      RABBITMQ_PASSWORD:
+        key: selvoc/dev/service/chat/rabbitmq-credentials
+        property: password
+
+      KEYCLOAK_CLIENT_SECRET:
+        key: selvoc/dev/service/chat/keycloak-client-secret
+        property: secret
