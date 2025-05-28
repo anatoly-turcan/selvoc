@@ -1,0 +1,135 @@
+name: Build and Deploy
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      name:
+        required: true
+        type: string
+      dockerfile:
+        required: false
+        type: string
+        default: ''
+      context:
+        required: false
+        type: string
+        default: '.'
+      helm_args:
+        required: false
+        type: string
+        default: ''
+      helm_values_file:
+        required: false
+        type: string
+        default: ''
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      AWS_REGION:
+        required: true
+      AWS_EKS_CLUSTER_NAME:
+        required: true
+      K8S_NAMESPACE:
+        required: false
+      helm_args:
+        required: false
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      image_tag: ${{ steps.build-image.outputs.image_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        id: build-image
+        env:
+          AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          AWS_ECR_REPOSITORY_NAME: ${{ vars[format('AWS_ECR_REPOSITORY_NAME_{0}', inputs.name)] }}
+          COMMIT_SHA: ${{ github.sha }}
+          DOCKERFILE_PATH: ${{ inputs.dockerfile }}
+        run: |
+          IMAGE_TAG=${COMMIT_SHA:0:7}
+          IMAGE_REPO=$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY_NAME
+          IMAGE_NAME=$IMAGE_REPO:$IMAGE_TAG
+          DOCKERFILE_PATH=${DOCKERFILE_PATH:-./backend/${{ inputs.name }}/Dockerfile}
+
+          docker build -f "$DOCKERFILE_PATH" -t $IMAGE_NAME ${{ inputs.context }}
+          docker push $IMAGE_NAME
+
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    needs: build-push
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.AWS_EKS_CLUSTER_NAME }}
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.12.0
+
+      - name: Deploy Helm chart
+        env:
+          AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          AWS_ECR_REPOSITORY_NAME: ${{ vars[format('AWS_ECR_REPOSITORY_NAME_{0}', inputs.name)] }}
+          HELM_CHART_PATH: "./infrastructure/helm/${{ inputs.name }}"
+          HELM_VALUES_FILE: ${{ inputs.helm_values_file }}
+          HELM_ARGS: "${{ inputs.helm_args }} ${{ secrets.helm_args }}"
+          NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
+        run: |
+          IMAGE_REPO=$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY_NAME
+
+          cd $HELM_CHART_PATH
+
+          if [ -n "$HELM_VALUES_FILE" ]; then
+            HELM_ARGS="$HELM_ARGS -f $HELM_VALUES_FILE"
+          fi
+
+          helm upgrade --install ${{ inputs.name }} . \
+            -f values.yaml \
+            --set image.repository=$IMAGE_REPO \
+            --set image.tag=${{ needs.build-push.outputs.image_tag }} \
+            $HELM_ARGS \
+            --namespace ${NAMESPACE:-default}
