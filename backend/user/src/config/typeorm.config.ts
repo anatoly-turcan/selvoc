@@ -11,9 +11,9 @@ export const typeormConfig: TypeormConfig = {
   username: get('POSTGRES_USERNAME').required().asString(),
   password: get('POSTGRES_PASSWORD').required().asString(),
   database: get('POSTGRES_DATABASE').required().asString(),
-  // ssl: {
-  //   rejectUnauthorized: false, // TODO: fix
-  // },
+  ssl: {
+    rejectUnauthorized: false, // TODO: fix
+  },
   migrationsRun: true,
   synchronize: false,
   logging: ['error', 'migration', 'schema'],

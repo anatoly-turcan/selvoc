@@ -1,0 +1,67 @@
+replicaCount: 1
+
+image:
+  repository: selvoc-user
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  host: user.selvoc.local
+  annotations: {}
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+env:
+  POSTGRES_PORT: 5432
+  POSTGRES_DATABASE: user
+  POSTGRES_POOL_SIZE: 10
+
+  RABBITMQ_PORT: 5672
+  RABBITMQ_PROTOCOL: amqp
+
+  KEYCLOAK_BASE_URL: http://keycloak.selvoc.svc.cluster.local:8080
+  KEYCLOAK_REALM: selvoc
+  KEYCLOAK_CLIENT_ID: user-service
+
+  LOGGER_LEVEL: debug
+
+secrets:
+  external:
+    enabled: true
+    refreshInterval: 1h
+    data:
+      POSTGRES_HOST:
+        key: postgres-credentials
+        property: host
+      POSTGRES_USERNAME:
+        key: postgres-credentials
+        property: username
+      POSTGRES_PASSWORD:
+        key: postgres-credentials
+        property: password
+
+      RABBITMQ_HOSTNAME:
+        key: rabbitmq-credentials
+        property: host
+      RABBITMQ_USERNAME:
+        key: rabbitmq-credentials
+        property: username
+      RABBITMQ_PASSWORD:
+        key: rabbitmq-credentials
+        property: password
+
+      KEYCLOAK_CLIENT_SECRET:
+        key: keycloak-client-secret
+        property: secret

@@ -1,6 +1,6 @@
 apiVersion: v2
-name: backend
-description: Helm chart for selvoc backend
+name: user
+description: Helm chart for selvoc user service
 
 # A chart can be either an 'application' or a 'library' chart.
 #
