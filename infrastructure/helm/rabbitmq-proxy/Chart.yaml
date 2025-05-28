@@ -1,0 +1,10 @@
+apiVersion: v2
+
+name: rabbitmq-proxy
+
+description: A Helm chart for rabbitmq proxy pod
+
+version: 0.1.0
+
+# helm install rabbitmq-proxy ./rabbitmq-proxy -n selvoc-dev --set rabbitmq.host=rabbitmq
+# kubectl -n selvoc-dev port-forward pod/rabbitmq-proxy 15671:15671

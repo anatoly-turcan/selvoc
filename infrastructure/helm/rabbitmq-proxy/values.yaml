@@ -1,0 +1,12 @@
+name: rabbitmq-proxy
+
+image:
+  repository: alpine/socat
+  tag: latest
+
+proxy:
+  port: 15671
+
+rabbitmq:
+  host: rabbitmq
+  port: 15671

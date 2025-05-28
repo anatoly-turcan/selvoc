@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  containers:
+  - name: socat
+    image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+    command: ["socat", "TCP-LISTEN:{{ .Values.proxy.port }},fork", "TCP:{{ .Values.rabbitmq.host }}:{{ .Values.rabbitmq.port }}"]
