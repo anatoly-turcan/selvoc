@@ -122,6 +122,18 @@ module "external_dns" {
   environment          = terraform.workspace
 }
 
+module "external_secrets" {
+  source               = "./modules/external_secrets"
+  eks_oidc_arn         = module.eks.oidc_arn
+  eks_oidc_provider_id = module.eks.oidc_provider_id
+  project_name         = var.project_name
+  environment          = terraform.workspace
+  region               = var.region
+  account_id           = data.aws_caller_identity.this.account_id
+
+  depends_on = [module.alb]
+}
+
 module "cicd" {
   source     = "./modules/cicd"
   platform   = var.cicd_platform
