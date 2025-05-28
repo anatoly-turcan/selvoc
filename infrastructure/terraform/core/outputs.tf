@@ -37,3 +37,7 @@ output "route53_nameservers" {
 output "route53_acm_certificate_arn" {
   value = module.route53.acm_certificate_arn
 }
+
+output "cicd_role_arn" {
+  value = module.cicd.role_arn
+}

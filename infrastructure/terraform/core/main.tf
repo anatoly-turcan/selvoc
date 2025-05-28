@@ -46,6 +46,7 @@ module "eks" {
   region             = var.region
   access_role_arns = {
     caller = data.aws_caller_identity.this.arn
+    cicd   = module.cicd.role_arn
   }
 }
 
@@ -119,4 +120,10 @@ module "external_dns" {
   eks_oidc_provider_id = module.eks.oidc_provider_id
   project_name         = var.project_name
   environment          = terraform.workspace
+}
+
+module "cicd" {
+  source     = "./modules/cicd"
+  platform   = var.cicd_platform
+  repository = var.cicd_repository
 }

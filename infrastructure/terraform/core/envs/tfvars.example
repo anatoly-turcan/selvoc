@@ -1,2 +1,4 @@
 region          = "eu-central-1"
 domain_name     = "<your-domain-name>"
+cicd_platform   = "github"
+cicd_repository = "<your-org/your-repo>"

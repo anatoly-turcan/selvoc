@@ -107,3 +107,13 @@ variable "mq_instance_types" {
     stage = "mq.t3.micro"
   }
 }
+
+variable "cicd_platform" {
+  type    = string
+  default = "github"
+}
+
+variable "cicd_repository" {
+  type        = string
+  description = "The repository identifier (e.g., 'your-org/your-repo')"
+}
