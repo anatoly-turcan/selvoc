@@ -28,7 +28,11 @@ spec:
         {{- end }}
         envFrom:
           - secretRef:
+              name: {{ .Release.Name }}-admin-secrets
+        {{- if .Values.secrets.external.enabled }}
+          - secretRef:
               name: {{ .Release.Name }}-secrets
+        {{- end}}
         resources:
           requests:
             memory: {{ .Values.resources.requests.memory }}

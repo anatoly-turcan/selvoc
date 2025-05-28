@@ -11,6 +11,7 @@ service:
 
 ingress:
   enabled: true
+  className: ""
   host: keycloak.selvoc.local
   annotations: {}
 
@@ -22,24 +23,42 @@ resources:
     memory: "1.5Gi"
     cpu: "1"
 
+auth:
+  username: admin
+  password: "" # Set this to a secure password (for example, from github secrets)
+
 env:
-  KC_DB: "postgres"
-  KC_DB_URL_HOST: "postgres.selvoc.svc.cluster.local"
-  KC_DB_URL_PORT: "5432"
-  KC_DB_URL_DATABASE: "keycloak"
-  KC_HEALTH_ENABLED: "true"
-  KC_METRICS_ENABLED: "true"
-  KC_HTTP_RELATIVE_PATH: "/"
-  # KC_HTTP_PORT: "8080"
-  KK_TO_RMQ_URL: "rabbitmq.selvoc.svc.cluster.local"
-  KK_TO_RMQ_PORT: "5672"
-  KK_TO_RMQ_VHOST: "/"
-  KK_TO_RMQ_EXCHANGE: "keycloak.topic"
+  KC_DB: postgres
+  KC_DB_URL_PORT: 5432
+  KC_DB_URL_DATABASE: keycloak
+  KC_HEALTH_ENABLED: true
+  KC_METRICS_ENABLED: true
+  KC_HTTP_RELATIVE_PATH: /
+  KK_TO_RMQ_PORT: 5672
+  KK_TO_RMQ_VHOST: /
+  KK_TO_RMQ_EXCHANGE: keycloak.topic
 
 secrets:
-  KEYCLOAK_ADMIN: <replace>
-  KEYCLOAK_ADMIN_PASSWORD: <replace>
-  KC_DB_USERNAME: <replace>
-  KC_DB_PASSWORD: <replace>
-  KK_TO_RMQ_USERNAME: <replace>
-  KK_TO_RMQ_PASSWORD: <replace>
+  external:
+    enabled: false
+    refreshInterval: 1h
+    data:
+      KC_DB_URL_HOST:
+        key: postgres
+        property: host
+      KC_DB_USERNAME:
+        key: postgres
+        property: username
+      KC_DB_PASSWORD:
+        key: postgres
+        property: password
+
+      KK_TO_RMQ_URL:
+        key: rabbitmq
+        property: host
+      KK_TO_RMQ_USERNAME:
+        key: rabbitmq
+        property: username
+      KK_TO_RMQ_PASSWORD:
+        key: rabbitmq
+        property: password
