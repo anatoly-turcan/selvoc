@@ -78,6 +78,11 @@ variable "eks_scaling_configs" {
   }
 }
 
+variable "eks_override_access_role_arns" {
+  type    = map(string)
+  default = {}
+}
+
 variable "rds_instance_classes" {
   description = "Instance classes for RDS by environment (workspace)"
   type        = map(string)

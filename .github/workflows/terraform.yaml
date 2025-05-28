@@ -1,0 +1,127 @@
+name: Terraform
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/terraform/core/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/terraform/core/**'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+  TF_VERSION: ${{ vars.TF_VERSION }}
+  TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
+  TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+  TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+  TF_BACKEND_WORKSPACE_PREFIX: ${{ secrets.TF_BACKEND_WORKSPACE_PREFIX }}
+  TF_BACKEND_DYNAMODB_TABLE: ${{ secrets.TF_BACKEND_DYNAMODB_TABLE }}
+  TF_VAR_region: ${{ secrets.AWS_REGION }}
+  TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
+  TF_VAR_cicd_platform: github
+  TF_VAR_cicd_repository: ${{ github.repository }}
+  TF_VAR_eks_override_access_role_arns: '{"caller":"${{ secrets.AWS_EKS_CALLER_ACCESS_ROLE_ARN }}"}'
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActionsTerraform
+
+      - name: Terraform Init
+        working-directory: ./infrastructure/terraform/core
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ env.TF_BACKEND_KEY }}" \
+            -backend-config="workspace_key_prefix=${{ env.TF_BACKEND_WORKSPACE_PREFIX }}" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ env.TF_BACKEND_DYNAMODB_TABLE }}"
+
+      - name: Terraform Format
+        working-directory: ./infrastructure/terraform/core
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: ./infrastructure/terraform/core
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ./infrastructure/terraform/core
+        run: |
+          terraform plan -out=tfplan -no-color || exit 1
+          terraform show -no-color tfplan > plan.txt
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: infrastructure/terraform/core/plan.txt
+          retention-days: 5
+
+  terraform-apply:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: dev
+    needs: terraform-plan
+    concurrency:
+      group: terraform-apply-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: GitHubActionsTerraform
+
+      - name: Terraform Init
+        working-directory: ./infrastructure/terraform/core
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ env.TF_BACKEND_KEY }}" \
+            -backend-config="workspace_key_prefix=${{ env.TF_BACKEND_WORKSPACE_PREFIX }}" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ env.TF_BACKEND_DYNAMODB_TABLE }}"
+
+      - name: Terraform Plan
+        working-directory: ./infrastructure/terraform/core
+        run: terraform plan -out=tfplan -no-color
+
+      - name: Terraform Apply
+        working-directory: ./infrastructure/terraform/core
+        run: terraform apply -auto-approve tfplan

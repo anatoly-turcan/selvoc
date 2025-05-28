@@ -44,10 +44,7 @@ module "eks" {
   project_name       = var.project_name
   environment        = terraform.workspace
   region             = var.region
-  access_role_arns = {
-    caller = data.aws_caller_identity.this.arn
-    cicd   = module.cicd.role_arn
-  }
+  access_role_arns   = local.eks_access_role_arns
 }
 
 module "ecr" {

@@ -7,6 +7,6 @@ locals {
     }
   }
 
-  oidc_config = local.oidc_configs[var.platform]
+  oidc_config     = local.oidc_configs[var.platform]
   provider_domain = replace(local.oidc_config.provider_url, "https://", "")
 }
