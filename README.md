@@ -19,7 +19,7 @@ The project serves as a technical showcase, with its concept centered around sim
 
 ## Technology Stack
 
-- **Languages**: TypeScript (Node.js), Python (planned for future LLM integration)
+- **Languages**: TypeScript (Node.js)
 - **Framework**: NestJS
 - **Architecture**: Clean Architecture, Domain-Driven Design (DDD), Microservices
 - **API**: GraphQL Federation (Apollo Federation). REST and gRPC are also planned
@@ -28,7 +28,7 @@ The project serves as a technical showcase, with its concept centered around sim
 - **Message Broker**: RabbitMQ
 - **Logging**: Pino
 - **Deployment**: AWS, Terraform, Helm charts
-- **CI/CD**: Planned with GitHub Actions
+- **CI/CD**: GitHub Actions
 - **Other**: WebSockets (planned), Custom NPM packages
 
 ## Architecture
@@ -150,7 +150,7 @@ src/
 
 ## Deployment
 
-Selvoc is designed for deployment on AWS, with infrastructure provisioned using Terraform and services deployed to Kubernetes via Helm charts.
+Selvoc is designed for deployment on AWS, with infrastructure provisioned using Terraform and services deployed to AWS EKS Kubernetes via Helm charts.
 
 ## Future Plans
 
@@ -158,8 +158,3 @@ Selvoc is designed for deployment on AWS, with infrastructure provisioned using 
 - **WebSocket Gateway**: Implement a dedicated service for real-time features using Socket.IO and RabbitMQ.
 - **Additional Microservices**: Expand functionality (e.g., vocabulary management, learning modules).
 - **LLM Integration**: Incorporate a large language model for contextual explanations.
-- **CI/CD Pipeline**: Fully automate builds, tests, and deployments.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
