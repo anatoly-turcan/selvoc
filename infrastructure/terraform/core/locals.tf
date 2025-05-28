@@ -7,6 +7,11 @@ locals {
   eks_cluster_name   = "${var.project_name}-${terraform.workspace}-eks"
   eks_instance_types = var.eks_instance_types[terraform.workspace]
   eks_scaling_config = var.eks_scaling_configs[terraform.workspace]
+  eks_default_access_role_arns = {
+    caller = data.aws_caller_identity.this.arn
+    cicd   = module.cicd.role_arn
+  }
+  eks_access_role_arns = merge(local.eks_default_access_role_arns, var.eks_override_access_role_arns)
 
   rds_instance_class    = var.rds_instance_classes[terraform.workspace]
   rds_allocated_storage = var.rds_allocated_storages[terraform.workspace]

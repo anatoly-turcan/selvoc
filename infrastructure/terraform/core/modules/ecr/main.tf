@@ -8,3 +8,13 @@ resource "aws_ecr_repository" "this" {
     Environment = var.environment
   }
 }
+
+resource "aws_ecr_repository" "citest" {
+  name         = "${var.project_name}-${var.environment}-citest"
+  force_delete = true
+
+  tags = {
+    Project     = var.project_name
+    Environment = var.environment
+  }
+}

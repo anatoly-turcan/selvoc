@@ -41,6 +41,9 @@ resource "aws_iam_role_policy" "this" {
       {
         Effect = "Allow"
         Action = [
+          "s3:*",
+          "dynamodb:*",
+          "iam:*",
           "ecr:*",
           "eks:*",
           "ec2:*",
@@ -50,21 +53,6 @@ resource "aws_iam_role_policy" "this" {
           "secretsmanager:*",
           "route53:*",
           "acm:*"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "iam:CreateRole",
-          "iam:UpdateRole",
-          "iam:DeleteRole",
-          "iam:CreatePolicy",
-          "iam:UpdatePolicy",
-          "iam:DeletePolicy",
-          "iam:AttachRolePolicy",
-          "iam:DetachRolePolicy",
-          "iam:PassRole"
         ]
         Resource = "*"
       }
