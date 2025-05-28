@@ -1,0 +1,28 @@
+name: CI/CD for gateway service
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/gateway/**'
+      - 'infrastructure/helm/gateway/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy-dev:
+    if: github.ref_name == 'main'
+    uses: ./.github/workflows/reusable-build-deploy.yaml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      environment: dev
+      name: gateway
+      helm_values_file: dev.values.yaml
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
+      K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
+      helm_args: |
+        --set ingress.annotations.alb\.ingress\.kubernetes\.io/certificate-arn=${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
