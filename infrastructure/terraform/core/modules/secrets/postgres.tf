@@ -1,3 +1,7 @@
+data "http" "rds_cert" {
+  url = "https://truststore.pki.rds.amazonaws.com/${var.region}/${var.region}-bundle.pem"
+}
+
 # Create secret for postgres main user
 resource "random_string" "postgres_username_suffix" {
   length  = 6
@@ -27,6 +31,7 @@ resource "aws_secretsmanager_secret_version" "postgres" {
     host     = var.postgres_host
     username = local.postgres_username
     password = random_password.postgres.result
+    cert     = data.http.rds_cert.body
   })
 }
 
@@ -67,5 +72,6 @@ resource "aws_secretsmanager_secret_version" "postgres_service" {
     host     = var.postgres_host
     username = "${each.key}_${random_string.postgres_username_suffix_service[each.key].result}"
     password = random_password.postgres_service[each.key].result
+    cert     = data.http.rds_cert.body
   })
 }

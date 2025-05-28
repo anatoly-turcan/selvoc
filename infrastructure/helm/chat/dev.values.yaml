@@ -29,6 +29,9 @@ secrets:
       POSTGRES_PASSWORD:
         key: selvoc/dev/service/chat/postgres-credentials
         property: password
+      POSTGRES_SSL_CERT:
+        key: selvoc/dev/service/chat/postgres-credentials
+        property: cert
 
       RABBITMQ_HOSTNAME:
         key: selvoc/dev/service/chat/rabbitmq-credentials

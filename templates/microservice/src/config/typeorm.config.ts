@@ -4,6 +4,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export type TypeormConfig = DataSourceOptions;
 
+const postgresSslCert = get('POSTGRES_SSL_CERT').asString();
+
 export const typeormConfig: TypeormConfig = {
   type: 'postgres',
   host: get('POSTGRES_HOST').required().asString(),
@@ -11,9 +13,7 @@ export const typeormConfig: TypeormConfig = {
   username: get('POSTGRES_USERNAME').required().asString(),
   password: get('POSTGRES_PASSWORD').required().asString(),
   database: get('POSTGRES_DATABASE').required().asString(),
-  // ssl: {
-  //   rejectUnauthorized: false, // TODO: fix
-  // },
+  ssl: postgresSslCert ? { ca: postgresSslCert } : undefined,
   migrationsRun: true,
   synchronize: false,
   logging: ['error', 'migration', 'schema'],

@@ -85,6 +85,7 @@ module "secrets" {
   source        = "./modules/secrets"
   project_name  = var.project_name
   environment   = terraform.workspace
+  region        = var.region
   postgres_host = module.rds.hostname
   rabbitmq_host = module.mq.hostname
 }

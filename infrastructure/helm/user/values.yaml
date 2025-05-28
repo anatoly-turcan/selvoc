@@ -51,6 +51,9 @@ secrets:
       POSTGRES_PASSWORD:
         key: postgres-credentials
         property: password
+      POSTGRES_SSL_CERT:
+        key: postgres-credentials
+        property: cert
 
       RABBITMQ_HOSTNAME:
         key: rabbitmq-credentials
