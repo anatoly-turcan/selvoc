@@ -4,13 +4,21 @@ resource "aws_iam_policy" "this" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = "route53:ChangeResourceRecordSets"
+        Effect = "Allow"
+        Action = [
+          "route53:ChangeResourceRecordSets",
+          "route53:ListResourceRecordSets"
+        ]
         Resource = "arn:aws:route53:::hostedzone/${var.route53_zone_id}"
       },
       {
-        Effect   = "Allow"
-        Action   = ["route53:ListHostedZones", "route53:ListResourceRecordSets", "route53:ListTagsForResources"]
+        Effect = "Allow"
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListHostedZonesByName",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResources"
+        ]
         Resource = "*"
       }
     ]

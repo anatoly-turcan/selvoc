@@ -118,10 +118,6 @@ jobs:
             -backend-config="region=${{ env.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ env.TF_BACKEND_DYNAMODB_TABLE }}"
 
-      - name: Terraform Plan
-        working-directory: ./infrastructure/terraform/core
-        run: terraform plan -out=tfplan -no-color
-
       - name: Terraform Apply
         working-directory: ./infrastructure/terraform/core
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve

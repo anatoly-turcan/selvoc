@@ -6,7 +6,7 @@ resource "helm_release" "this" {
   create_namespace = true
 
   set {
-    name  = "provider"
+    name  = "provider.name"
     value = "aws"
   }
 
@@ -28,5 +28,10 @@ resource "helm_release" "this" {
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.this.arn
+  }
+
+  set {
+    name  = "policy"
+    value = "sync"
   }
 }
