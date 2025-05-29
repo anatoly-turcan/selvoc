@@ -1,8 +1,8 @@
 # Gateway Microservice
 
 This microservice serves as the GraphQL API gateway for the Selvoc backend,
-federating multiple subgraphs (such as user and chat services) into a single GraphQL endpoint.
-It is built with NestJS and Apollo Federation.
+federating multiple subgraphs (such as user and chat services) into a single
+GraphQL endpoint. It is built with NestJS and Apollo Federation.
 
 ## Features
 
@@ -46,11 +46,13 @@ It is built with NestJS and Apollo Federation.
 
 ## Configuration
 
-- All configuration is managed via environment variables. See `.env.example` for details.
+- All configuration is managed via environment variables. See `.env.example`
+  for details.
 - The gateway will run on `http://localhost:3000` by default.
 
 ## Usage
 
-- Access the federated GraphQL endpoint at: `http://localhost:3000/graphql` (introspection and playground enabled)
+- Access the federated GraphQL endpoint at: `http://localhost:3000/graphql`
+  (introspection and playground enabled)
 - Health check: `GET /health`
 - Version info: `GET /version`

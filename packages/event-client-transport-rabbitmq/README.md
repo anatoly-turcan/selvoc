@@ -8,11 +8,13 @@ A RabbitMQ transport for use with [`@selvoc/event-client`](../event-client/READM
 npm install @selvoc/event-client-transport-rabbitmq
 ```
 
-> **Note:** You also need to install and configure [`@selvoc/event-client`](../event-client/README.md) in your project.
+> **Note:** You also need to install and configure
+> [`@selvoc/event-client`](../event-client/README.md) in your project.
 
 ## Usage
 
-See the [@selvoc/event-client README](../event-client/README.md) for general setup, event definitions, and basic usage.
+See the [@selvoc/event-client README](../event-client/README.md) for general
+setup, event definitions, and basic usage.
 
 ### Configuring
 

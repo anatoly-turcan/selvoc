@@ -1,15 +1,21 @@
 # Event Client
 
-An experimental TypeScript library for event-driven communication in microservices.
-This is not production-ready and is likely to change significantly in the future.
+An experimental TypeScript library for event-driven communication in
+microservices. This is not production-ready and is likely to change
+significantly in the future.
 
-This library provides a simple, object-oriented approach to event-driven systems, using decorators for event definition and handling.
-It aims to make event publishing and consumption type-safe and ergonomic, but is still in early development and may have breaking changes.
+This library provides a simple, object-oriented approach to event-driven
+systems, using decorators for event definition and handling. It aims to make
+event publishing and consumption type-safe and ergonomic, but is still in
+early development and may have breaking changes.
 
 ## Features
 
-- Pluggable transports (see [`@selvoc/event-client-transport-basic`](../event-client-transport-basic) and [`@selvoc/event-client-transport-rabbitmq`](../event-client-transport-rabbitmq))
-- Event validation with [`class-validator`](https://github.com/typestack/class-validator) and transformation with [`class-transformer`](https://github.com/typestack/class-transformer)
+- Pluggable transports (see
+  [`@selvoc/event-client-transport-basic`](../event-client-transport-basic)
+  and [`@selvoc/event-client-transport-rabbitmq`](../event-client-transport-rabbitmq))
+- Event validation with [`class-validator`](https://github.com/typestack/class-validator)
+  and transformation with [`class-transformer`](https://github.com/typestack/class-transformer)
 - Custom event classes with decorators
 - Decorator-based event handling (no manual registration)
 - Event producing
@@ -21,7 +27,8 @@ It aims to make event publishing and consumption type-safe and ergonomic, but is
 npm install @selvoc/event-client @selvoc/event-client-transport-basic class-validator reflect-metadata
 ```
 
-> **Peer dependencies:** `class-validator`, `class-transformer`, and `reflect-metadata` must be installed.
+> **Peer dependencies:** `class-validator`, `class-transformer`, and
+> `reflect-metadata` must be installed.
 
 ## Usage
 
@@ -39,15 +46,15 @@ export class UserCreatedEvent {
   static build(userId: string): UserCreatedEvent {
     const event = new UserCreatedEvent();
     event.userId = userId;
-
     return event;
   }
 }
 ```
 
 > **Note:** Do not use a constructor with parameters in your event classes.
-> Due to how `class-transformer` works, it does not pass parameters to the constructor when deserializing.
-> Use a static `build` method instead. This may improve in the future.
+> Due to how `class-transformer` works, it does not pass parameters to the
+> constructor when deserializing. Use a static `build` method instead. This
+> may improve in the future.
 
 ### Setting up the Event Client
 

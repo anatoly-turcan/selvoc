@@ -1,4 +1,4 @@
-name: CI/CD for keycloak
+name: CI/CD for Keycloak
 on:
   push:
     branches:

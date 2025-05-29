@@ -8,4 +8,3 @@ GRANT USAGE, CREATE ON SCHEMA public TO keycloak;
 -- databases for services
 CREATE DATABASE "user";
 CREATE DATABASE "chat";
-CREATE DATABASE "vocabulary";

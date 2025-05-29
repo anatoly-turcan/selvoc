@@ -1,11 +1,11 @@
-name: CI/CD for gateway service
+name: CI/CD for Chat
 on:
   push:
     branches:
       - main
     paths:
-      - 'backend/gateway/**'
-      - 'infrastructure/helm/gateway/**'
+      - 'backend/chat/**'
+      - 'infrastructure/helm/chat/**'
   workflow_dispatch:
 
 jobs:
@@ -17,14 +17,12 @@ jobs:
       contents: read
     with:
       environment: dev
-      name: gateway
+      name: chat
       context: .
-      dockerfile: backend/gateway/Dockerfile
+      dockerfile: backend/chat/Dockerfile
       helm_values_file: dev.values.yaml
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
-      helm_args: |
-        --set ingress.annotations.alb\.ingress\.kubernetes\.io/certificate-arn=${{ secrets.AWS_ACM_CERTIFICATE_ARN }}

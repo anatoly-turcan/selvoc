@@ -1,10 +1,12 @@
 # Nest Keycloak Admin Client
 
-This package provides a wrapper around the Keycloak Admin Client for use with NestJS.
+This package provides a wrapper around the Keycloak Admin Client for use with
+NestJS.
 
 ## Installation
 
-`@keycloak/keycloak-admin-client` is a peer dependency, so you need to install it separately.
+`@keycloak/keycloak-admin-client` is a peer dependency, so you need to install
+it separately.
 
 ```bash
 npm install @selvoc/nest-keycloak-admin-client @keycloak/keycloak-admin-client

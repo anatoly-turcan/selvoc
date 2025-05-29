@@ -1,8 +1,9 @@
 # Chat Microservice
 
-This microservice manages chat functionality, including chat creation, membership, and messaging.
-It provides a GraphQL API and integrates with Keycloak for authentication.
-Built with NestJS and following clean architecture principles, it is designed for scalability and maintainability.
+This microservice manages chat functionality, including chat creation,
+membership, and messaging. It provides a GraphQL API and integrates with
+Keycloak for authentication. Built with NestJS and following clean architecture
+principles, it is designed for scalability and maintainability.
 
 ## Features
 
@@ -54,35 +55,41 @@ Built with NestJS and following clean architecture principles, it is designed fo
 
 ## Configuration
 
-- All configuration is managed via environment variables. See `.env.example` for defaults and required values.
+- All configuration is managed via environment variables. See `.env.example` for
+  defaults and required values.
 - The service will run on `http://localhost:3002` by default (or as configured).
 
 ## Usage
 
-- Access the GraphQL endpoint at: `http://localhost:3002/graphql` (federated schema, introspection and playground enabled)
+- Access the GraphQL endpoint at: `http://localhost:3002/graphql` (federated
+  schema, introspection and playground enabled)
 - Health check: `GET /health`
 - Version info: `GET /version`
 
 ## Chat Domain
 
-The chat microservice supports chat creation, membership management, and messaging.
-Entities include `Chat`, `ChatMembership`, and `ChatMessage`.
-Events such as `ChatMemberJoined` and `ChatMessageCreated` are used for event-driven features and integrations.
+The chat microservice supports chat creation, membership management, and
+messaging. Entities include `Chat`, `ChatMembership`, and `ChatMessage`. Events
+such as `ChatMemberJoined` and `ChatMessageCreated` are used for event-driven
+features and integrations.
 
 ## WebSocket Support (Planned)
 
-Real-time chat updates for the frontend are planned to be delivered via WebSockets.
-Instead of implementing WebSocket logic directly in this microservice, a separate, generic WebSocket gateway service is planned.
-This gateway will:
+Real-time chat updates for the frontend are planned to be delivered via
+WebSockets. Instead of implementing WebSocket logic directly in this microservice,
+a separate, generic WebSocket gateway service is planned. This gateway will:
 
 - Use socket.io for client connections
 - Map RabbitMQ events to WebSocket events and vice versa
 - Serve as a central hub for real-time features across multiple microservices
 
-This approach allows for better scalability and separation of concerns. Currently, this WebSocket gateway is not yet implemented.
+This approach allows for better scalability and separation of concerns. Currently,
+this WebSocket gateway is not yet implemented.
 
-> **Note:** GraphQL subscriptions are not used for real-time chat because they are not well-suited or scalable for high-throughput, multi-service event delivery in this architecture.
-> The planned WebSocket gateway provides a more robust and flexible solution for real-time communication.
+> **Note:** GraphQL subscriptions are not used for real-time chat because they are
+> not well-suited or scalable for high-throughput, multi-service event delivery in
+> this architecture. The planned WebSocket gateway provides a more robust and
+> flexible solution for real-time communication.
 
 ## Scripts
 

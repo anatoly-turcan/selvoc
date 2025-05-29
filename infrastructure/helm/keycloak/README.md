@@ -2,8 +2,10 @@
 
 ## Prerequisites
 
-- Install the PostgreSQL Helm chart first, which creates a `postgres-secrets` Secret with `keycloakUsername` and `keycloakPassword` keys.
-- Install the RabbitMQ Helm chart then, which creates a `rabbitmq-secrets` Secret with `username` and `password` keys.
+- Install the PostgreSQL Helm chart first, which creates a `postgres-secrets`
+  Secret with `keycloakUsername` and `keycloakPassword` keys.
+- Install the RabbitMQ Helm chart then, which creates a `rabbitmq-secrets`
+  Secret with `username` and `password` keys.
 
 ## Install
 

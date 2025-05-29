@@ -1,11 +1,11 @@
-name: CI/CD for chat service
+name: CI/CD for User
 on:
   push:
     branches:
       - main
     paths:
-      - 'backend/chat/**'
-      - 'infrastructure/helm/chat/**'
+      - 'backend/user/**'
+      - 'infrastructure/helm/user/**'
   workflow_dispatch:
 
 jobs:
@@ -17,9 +17,9 @@ jobs:
       contents: read
     with:
       environment: dev
-      name: chat
+      name: user
       context: .
-      dockerfile: backend/chat/Dockerfile
+      dockerfile: backend/user/Dockerfile
       helm_values_file: dev.values.yaml
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}

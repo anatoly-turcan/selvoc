@@ -1,7 +1,8 @@
 # Nest Auth
 
-A shared NestJS module for authentication in the Selvoc project.
-This package provides common authentication utilities and wrappers to simplify development across Selvoc backend services.
+A shared NestJS module for authentication in the Selvoc project. This package
+provides common authentication utilities and wrappers to simplify development
+across Selvoc backend services.
 
 ## Usage Example
 
@@ -19,4 +20,5 @@ import { AuthModule } from '@selvoc/nest-auth';
 export class AppModule {}
 ```
 
-You can then use the provided `AuthGuard` and decorators (like `@Public()`) in your controllers/services.
+You can then use the provided `AuthGuard` and decorators (like `@Public()`)
+in your controllers/services.
