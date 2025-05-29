@@ -101,7 +101,7 @@ Each microservice follows a modular structure with distinct application, domain,
 ## Project Structure
 
 - `backend/`: Microservices implementation
-- `configs/`: Configuration files (e.g., Keycloak realm, PostgreSQL init scripts)
+- `configs/`: Configuration files (e.g., PostgreSQL init scripts)
 - `frontend/`: Placeholder for future frontend (not yet implemented)
 - `infrastructure/`: Terraform and Helm charts
 - `packages/`: Shared NPM packages (e.g., `@selvoc/common`, `@selvoc/nest-auth`)

@@ -18,6 +18,8 @@ jobs:
     with:
       environment: dev
       name: chat
+      context: .
+      dockerfile: backend/chat/Dockerfile
       helm_values_file: dev.values.yaml
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}

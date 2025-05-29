@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'configs/keycloak/**'
+      - 'backend/keycloak/**'
       - 'infrastructure/helm/keycloak/**'
   workflow_dispatch:
 
@@ -18,8 +18,7 @@ jobs:
     with:
       environment: dev
       name: keycloak
-      dockerfile: configs/keycloak/Dockerfile
-      context: configs/keycloak
+      context: backend/keycloak
       helm_values_file: dev.values.yaml
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}

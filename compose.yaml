@@ -31,7 +31,10 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/
 
   keycloak:
-    build: configs/keycloak
+    build:
+      context: backend/keycloak
+      args:
+        REALM_FILE: selvoc-local-realm.json
     restart: unless-stopped
     ports:
       - ${KEYCLOAK_PORT:-8080}:8080
@@ -68,8 +71,6 @@ services:
     build:
       context: .
       dockerfile: backend/gateway/Dockerfile
-      secrets:
-        - github_token
     restart: unless-stopped
     ports:
       - ${GATEWAY_PORT:-3000}:3000
@@ -88,8 +89,6 @@ services:
     build:
       context: .
       dockerfile: backend/user/Dockerfile
-      secrets:
-        - github_token
     restart: unless-stopped
     ports:
       - ${USER_PORT:-3001}:3000
@@ -101,7 +100,7 @@ services:
       POSTGRES_DATABASE: user
       POSTGRES_POOL_SIZE: 10
       KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
-      KEYCLOAK_REALM: selvoc
+      KEYCLOAK_REALM: selvoc-local
       KEYCLOAK_CLIENT_ID: ${USER_KEYCLOAK_CLIENT_ID:-user-service}
       KEYCLOAK_CLIENT_SECRET: $USER_KEYCLOAK_CLIENT_SECRET
       RABBITMQ_PROTOCOL: amqp
@@ -121,8 +120,6 @@ services:
     build:
       context: .
       dockerfile: backend/chat/Dockerfile
-      secrets:
-        - github_token
     restart: unless-stopped
     ports:
       - ${CHAT_PORT:-3002}:3000
@@ -134,7 +131,7 @@ services:
       POSTGRES_DATABASE: chat
       POSTGRES_POOL_SIZE: 10
       KEYCLOAK_BASE_URL: http://keycloak:${KEYCLOAK_PORT:-8080}
-      KEYCLOAK_REALM: selvoc
+      KEYCLOAK_REALM: selvoc-local
       KEYCLOAK_CLIENT_ID: ${CHAT_KEYCLOAK_CLIENT_ID:-chat-service}
       KEYCLOAK_CLIENT_SECRET: $CHAT_KEYCLOAK_CLIENT_SECRET
       RABBITMQ_PROTOCOL: amqp
