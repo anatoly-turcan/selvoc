@@ -48,19 +48,22 @@ asynchronously via RabbitMQ.
 
 1. **Clone the Repository**:
 
-   ```bash
-   git clone https://github.com/anatoly-turcan/selvoc.git
-   cd selvoc
-   ```
+    ```bash
+    git clone https://github.com/anatoly-turcan/selvoc.git
+    cd selvoc
+    ```
 
 2. **Set Up Environment Variables**:
-   - Copy `.env.example` to `.env` and adjust as needed.
+
+    ```bash
+    cp .env.example .env
+    ```
 
 3. **Start Services**:
 
-     ```bash
-     docker compose up -d
-     ```
+    ```bash
+    docker compose up -d
+    ```
 
     (Or run each service individually; see each service's README.)
 

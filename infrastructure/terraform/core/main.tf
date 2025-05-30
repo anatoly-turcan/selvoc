@@ -63,7 +63,7 @@ module "rds" {
   password                   = module.secrets.postgres_password
   project_name               = var.project_name
   environment                = terraform.workspace
-  ingress_security_group_ids = [module.eks.node_group_sg_id]
+  ingress_security_group_ids = [module.eks.node_group_sg_id, module.github_runner.sg_id]
 }
 
 module "mq" {
@@ -75,7 +75,7 @@ module "mq" {
   password                   = module.secrets.rabbitmq_password
   project_name               = var.project_name
   environment                = terraform.workspace
-  ingress_security_group_ids = [module.eks.node_group_sg_id]
+  ingress_security_group_ids = [module.eks.node_group_sg_id, module.github_runner.sg_id]
 }
 
 module "secrets" {
@@ -136,4 +136,21 @@ module "cicd" {
   source     = "./modules/cicd"
   platform   = var.cicd_platform
   repository = var.cicd_repository
+}
+
+module "github_runner" {
+  source       = "./modules/github_runner"
+  project_name = var.project_name
+  environment  = terraform.workspace
+  region       = var.region
+  account_id   = data.aws_caller_identity.this.account_id
+  vpc_id       = module.vpc.id
+  vpc_cidr     = local.vpc_cidr
+  subnet_id    = module.vpc.private_subnet_ids[0]
+  # subnet_id        = module.vpc.public_subnet_ids[0]
+  eks_cluster_name = module.eks.cluster_name
+  repository_url   = var.github_runner_repository_url
+  token            = var.github_runner_token
+  runner_version   = var.github_runner_version
+  instance_type    = var.github_runner_instance_type
 }

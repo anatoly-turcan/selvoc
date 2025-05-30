@@ -122,3 +122,25 @@ variable "cicd_repository" {
   type        = string
   description = "The repository identifier (e.g., 'your-org/your-repo')"
 }
+
+variable "github_runner_repository_url" {
+  type        = string
+  description = "The URL of the GitHub repository for the self-hosted runner"
+}
+
+variable "github_runner_token" {
+  type        = string
+  description = "GitHub token for the self-hosted runner"
+  sensitive   = true
+  default     = ""
+}
+
+variable "github_runner_instance_type" {
+  type    = string
+  default = "t3.small"
+}
+
+variable "github_runner_version" {
+  type    = string
+  default = "2.324.0"
+}
