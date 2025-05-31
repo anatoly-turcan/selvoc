@@ -8,9 +8,9 @@ locals {
   eks_instance_types = var.eks_instance_types[terraform.workspace]
   eks_scaling_config = var.eks_scaling_configs[terraform.workspace]
   eks_default_access_role_arns = {
-    caller = data.aws_caller_identity.this.arn
-    cicd   = module.cicd.role_arn
-    github = module.github_runner.role_arn
+    caller        = data.aws_caller_identity.this.arn
+    cicd          = module.cicd.role_arn
+    github_runner = module.github_runner.role_arn
   }
   eks_access_role_arns = merge(local.eks_default_access_role_arns, var.eks_override_access_role_arns)
 

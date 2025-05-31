@@ -73,7 +73,7 @@ asynchronously via RabbitMQ.
 - **User Service**: `http://localhost:3001/graphql`
 - **Chat Service**: `http://localhost:3002/graphql`
 
-Health checks and version info are available at /health and /version on each service.
+Health checks and version info are available at `/health` and `/version` on each service.
 
 ## Configuration
 

@@ -11,16 +11,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.96.0"
     }
-
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.17.0"
-    }
-
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.36.0"
-    }
   }
 }
 
@@ -87,49 +77,10 @@ module "secrets" {
   rabbitmq_host = module.mq.hostname
 }
 
-module "alb" {
-  source           = "./modules/alb"
-  vpc_id           = module.vpc.id
-  cluster_name     = module.eks.cluster_name
-  oidc_arn         = module.eks.oidc_arn
-  oidc_provider_id = module.eks.oidc_provider_id
-  project_name     = var.project_name
-  environment      = terraform.workspace
-  region           = var.region
-}
-
 module "route53" {
   source       = "./modules/route53"
   domain_name  = var.domain_name
   project_name = var.project_name
-}
-
-module "k8s" {
-  source       = "./modules/k8s"
-  project_name = var.project_name
-  environment  = terraform.workspace
-}
-
-module "external_dns" {
-  source               = "./modules/external_dns"
-  domain_name          = var.domain_name
-  route53_zone_id      = module.route53.zone_id
-  eks_oidc_arn         = module.eks.oidc_arn
-  eks_oidc_provider_id = module.eks.oidc_provider_id
-  project_name         = var.project_name
-  environment          = terraform.workspace
-}
-
-module "external_secrets" {
-  source               = "./modules/external_secrets"
-  eks_oidc_arn         = module.eks.oidc_arn
-  eks_oidc_provider_id = module.eks.oidc_provider_id
-  project_name         = var.project_name
-  environment          = terraform.workspace
-  region               = var.region
-  account_id           = data.aws_caller_identity.this.account_id
-
-  depends_on = [module.alb]
 }
 
 module "cicd" {
@@ -139,15 +90,14 @@ module "cicd" {
 }
 
 module "github_runner" {
-  source       = "./modules/github_runner"
-  project_name = var.project_name
-  environment  = terraform.workspace
-  region       = var.region
-  account_id   = data.aws_caller_identity.this.account_id
-  vpc_id       = module.vpc.id
-  vpc_cidr     = local.vpc_cidr
-  subnet_id    = module.vpc.private_subnet_ids[0]
-  # subnet_id        = module.vpc.public_subnet_ids[0]
+  source           = "./modules/github_runner"
+  project_name     = var.project_name
+  environment      = terraform.workspace
+  region           = var.region
+  account_id       = data.aws_caller_identity.this.account_id
+  vpc_id           = module.vpc.id
+  vpc_cidr         = local.vpc_cidr
+  subnet_id        = module.vpc.private_subnet_ids[0]
   eks_cluster_name = module.eks.cluster_name
   repository_url   = var.github_runner_repository_url
   token            = var.github_runner_token

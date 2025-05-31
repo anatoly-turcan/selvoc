@@ -59,8 +59,9 @@ terraform init
 terraform apply -auto-approve
 # Backup the Terraform state to S3
 ./backup_state.sh upload $(terraform output -raw s3_bucket)
-# Generate backend configuration file for core infrastructure
+# Generate backend configuration file for core and internal infrastructure
 terraform output -raw backend_config_core > ../core/backend.config
+terraform output -raw backend_config_internal > ../internal/backend.config
 ```
 
 ### 2. Provision Core Infrastructure (First Time Local, Then CI/CD)

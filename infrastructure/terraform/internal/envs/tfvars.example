@@ -1,0 +1,6 @@
+core_backend = {
+  bucket               = "core-backend-bucket"
+  key                  = "core/terraform.tfstate"
+  workspace_key_prefix = "core"
+  region               = "eu-central-1"
+}
