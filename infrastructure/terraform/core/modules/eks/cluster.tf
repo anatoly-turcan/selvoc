@@ -3,8 +3,10 @@ resource "aws_eks_cluster" "this" {
   role_arn = aws_iam_role.eks.arn
 
   vpc_config {
-    subnet_ids         = var.private_subnet_ids
-    security_group_ids = [aws_security_group.eks.id]
+    subnet_ids              = var.private_subnet_ids
+    security_group_ids      = [aws_security_group.eks.id]
+    endpoint_public_access  = false
+    endpoint_private_access = true
   }
 
   access_config {
@@ -49,12 +51,14 @@ resource "aws_iam_role_policy_attachment" "eks" {
 
 resource "aws_security_group" "eks" {
   vpc_id = var.vpc_id
+
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
