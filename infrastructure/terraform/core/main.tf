@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.11.4"
+  required_version = ">= 1.11, < 2.0"
 
   backend "s3" {
     # Load with `terraform init -backend-config=backend.config`

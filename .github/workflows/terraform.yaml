@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - 'infrastructure/terraform/core/**'
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -22,10 +23,10 @@ env:
   AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
   TF_VERSION: ${{ vars.TF_VERSION }}
   TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
-  TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-  TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
-  TF_BACKEND_WORKSPACE_PREFIX: ${{ secrets.TF_BACKEND_WORKSPACE_PREFIX }}
-  TF_BACKEND_DYNAMODB_TABLE: ${{ secrets.TF_BACKEND_DYNAMODB_TABLE }}
+  TF_CORE_BACKEND_BUCKET: ${{ secrets.TF_CORE_BACKEND_BUCKET }}
+  TF_CORE_BACKEND_KEY: ${{ secrets.TF_CORE_BACKEND_KEY }}
+  TF_CORE_BACKEND_WORKSPACE_PREFIX: ${{ secrets.TF_CORE_BACKEND_WORKSPACE_PREFIX }}
+  TF_CORE_BACKEND_DYNAMODB_TABLE: ${{ secrets.TF_CORE_BACKEND_DYNAMODB_TABLE }}
   TF_VAR_region: ${{ secrets.AWS_REGION }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
   TF_VAR_cicd_platform: github
@@ -56,11 +57,11 @@ jobs:
         working-directory: ./infrastructure/terraform/core
         run: |
           terraform init \
-            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="key=${{ env.TF_BACKEND_KEY }}" \
-            -backend-config="workspace_key_prefix=${{ env.TF_BACKEND_WORKSPACE_PREFIX }}" \
+            -backend-config="bucket=${{ env.TF_CORE_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ env.TF_CORE_BACKEND_KEY }}" \
+            -backend-config="workspace_key_prefix=${{ env.TF_CORE_BACKEND_WORKSPACE_PREFIX }}" \
             -backend-config="region=${{ env.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ env.TF_BACKEND_DYNAMODB_TABLE }}"
+            -backend-config="dynamodb_table=${{ env.TF_CORE_BACKEND_DYNAMODB_TABLE }}"
 
       - name: Terraform Format
         working-directory: ./infrastructure/terraform/core
@@ -112,11 +113,11 @@ jobs:
         working-directory: ./infrastructure/terraform/core
         run: |
           terraform init \
-            -backend-config="bucket=${{ env.TF_BACKEND_BUCKET }}" \
-            -backend-config="key=${{ env.TF_BACKEND_KEY }}" \
-            -backend-config="workspace_key_prefix=${{ env.TF_BACKEND_WORKSPACE_PREFIX }}" \
+            -backend-config="bucket=${{ env.TF_CORE_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ env.TF_CORE_BACKEND_KEY }}" \
+            -backend-config="workspace_key_prefix=${{ env.TF_CORE_BACKEND_WORKSPACE_PREFIX }}" \
             -backend-config="region=${{ env.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ env.TF_BACKEND_DYNAMODB_TABLE }}"
+            -backend-config="dynamodb_table=${{ env.TF_CORE_BACKEND_DYNAMODB_TABLE }}"
 
       - name: Terraform Apply
         working-directory: ./infrastructure/terraform/core
