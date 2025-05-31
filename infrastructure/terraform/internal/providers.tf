@@ -39,3 +39,11 @@ provider "helm" {
     }
   }
 }
+
+provider "postgresql" {
+  host            = local.rds.hostname
+  username        = local.rds.username
+  password        = local.rds.password
+  connect_timeout = 10
+  superuser       = false
+}

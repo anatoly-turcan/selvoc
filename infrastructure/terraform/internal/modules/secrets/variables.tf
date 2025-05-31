@@ -2,23 +2,12 @@ variable "environment" {
   type = string
 }
 
-variable "region" {
-  type = string
-}
 
 variable "project_name" {
   type = string
 }
 
-variable "postgres_host" {
-  type = string
-}
-
-variable "rabbitmq_host" {
-  type = string
-}
-
-variable "rabbitmq_username" {
-  type      = string
-  sensitive = true
+variable "services_with_keycloak_client_secret" {
+  type        = set(string)
+  description = "Names of services that require a Keycloak client secret"
 }

@@ -19,11 +19,13 @@ variable "ingress_security_group_ids" {
 }
 
 variable "username" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "instance_class" {

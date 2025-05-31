@@ -68,3 +68,23 @@ output "route53" {
     zone_id = module.route53.zone_id
   }
 }
+
+output "rds" {
+  value = {
+    endpoint = module.rds.endpoint
+    hostname = module.rds.hostname
+    username = module.rds.username
+    password = module.rds.password
+  }
+  sensitive = true
+}
+
+output "mq" {
+  value = {
+    endpoint = module.mq.endpoint
+    hostname = module.mq.hostname
+    username = module.mq.username
+    password = module.mq.password
+  }
+  sensitive = true
+}

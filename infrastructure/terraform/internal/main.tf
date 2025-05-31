@@ -26,6 +26,11 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.17.0"
     }
+
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = "~> 1.25.0"
+    }
   }
 }
 
@@ -72,4 +77,35 @@ module "external_secrets" {
   providers = {
     kubectl = kubectl
   }
+}
+
+module "secrets" {
+  source       = "./modules/secrets"
+  project_name = local.project_name
+  environment  = terraform.workspace
+
+  services_with_keycloak_client_secret = ["user", "chat"]
+}
+
+module "postgres" {
+  source       = "./modules/postgres"
+  region       = local.region
+  project_name = local.project_name
+  environment  = terraform.workspace
+  host         = local.rds.hostname
+  services     = ["keycloak", "user", "chat"]
+
+  providers = {
+    postgresql = postgresql
+  }
+}
+
+module "rabbitmq" {
+  source       = "./modules/rabbitmq"
+  project_name = local.project_name
+  environment  = terraform.workspace
+  host         = local.mq.hostname
+  username     = local.mq.username
+  password     = local.mq.password
+  services     = ["keycloak", "user", "chat"]
 }
