@@ -4,10 +4,12 @@ This guide outlines the steps to provision and manage infrastructure using
 Terraform, AWS, and Kubernetes. It assumes familiarity with AWS, Terraform,
 and Kubernetes.
 
-## Core Infrastructure Overview
+## Infrastructure Overview
 
-The `core` Terraform configuration provisions the foundational AWS and Kubernetes
-infrastructure for the Selvoc platform. Key resources include:
+### Core
+
+The `core` Terraform configuration provisions the foundational AWS resources for
+the Selvoc platform. Private VPC access not needed. Key resources include:
 
 - **VPC**: A dedicated Virtual Private Cloud with public and private subnets for
   secure network segmentation.
@@ -19,16 +21,31 @@ infrastructure for the Selvoc platform. Key resources include:
   communication between services.
 - **ECR**: Elastic Container Registry repositories for storing Docker images of
   all microservices.
-- **ALB**: Application Load Balancer for routing external traffic to Kubernetes
-  services.
 - **Route53**: DNS management and ACM certificate provisioning for secure,
   custom domain access.
 - **Secrets Management**: AWS Secrets Manager integration for securely storing
   and distributing sensitive credentials.
-- **External DNS & External Secrets**: Automated management of DNS records and
-  Kubernetes secrets from AWS.
 - **CI/CD IAM Role**: Dedicated IAM role for GitHub Actions or other CI/CD
-  systems to deploy infrastructure and workloads.
+  systems to deploy infrastructure and workloads that doesn't require VPC access.
+- **Github Runner**: A GitHub Actions runner module to execute Terraform mainly
+  for the internal infrastructure, which requires VPC access.
+
+### Internal
+
+The `internal` Terraform configuration is used to manage internal resources
+such as Kubernetes, Helm, PostgreSQL, which require VPC access. runs with self-hosted
+github runner, provisioned by `core` Terraform. Key resources include:
+
+- **ALB**: Application Load Balancer for routing external traffic to Kubernetes
+  services.
+- **External DNS**: Automated management of DNS records in Route53 based on
+  Kubernetes Ingress resources.
+- **External Secrets**: Integration with AWS Secrets Manager to
+  automatically sync secrets into Kubernetes.
+- **Kubernetes**: Basic resources like namespaces, manifests, etc.
+- **PostgreSQL**: Database management (databases, users, schemas, etc.) using
+  postgresql terraform provider.
+- **RabbitMQ**: Planned, similar to PostgreSQL.
 
 This setup ensures a secure, scalable, and production-ready environment for
 deploying and operating Selvoc microservices on AWS.
@@ -37,8 +54,7 @@ deploying and operating Selvoc microservices on AWS.
 
 - AWS account with admin access
 - AWS CLI configured with static credentials
-- Terraform installed (version specified in GitHub Actions `TF_VERSION`,
-  e.g., 1.11.4)
+- Terraform installed
 - Helm installed
 - kubectl installed
 - GitHub repository access with admin permissions
@@ -57,9 +73,11 @@ script to upload it to S3.
 cd infrastructure/terraform/bootstrap
 terraform init
 terraform apply -auto-approve
+
 # Backup the Terraform state to S3
 ./backup_state.sh upload $(terraform output -raw s3_bucket)
-# Generate backend configuration file for core and internal infrastructure
+
+# Generate backend configuration file for core and internal infrastructures
 terraform output -raw backend_config_core > ../core/backend.config
 terraform output -raw backend_config_internal > ../internal/backend.config
 ```
@@ -70,11 +88,9 @@ terraform output -raw backend_config_internal > ../internal/backend.config
 cd ../core
 # Copy and adjust tfvars
 cp envs/tfvars.example envs/dev.tfvars
-# Edit envs/dev.tfvars with your values
+
 terraform init -backend-config=backend.config -var-file=envs/dev.tfvars
 terraform workspace new dev
-# Initial apply for EKS and External Secrets
-terraform apply -var-file=envs/dev.tfvars -target=module.eks -target=module.external_secrets.helm_release.this
 terraform apply -var-file=envs/dev.tfvars -auto-approve
 ```
 
@@ -83,7 +99,8 @@ terraform apply -var-file=envs/dev.tfvars -auto-approve
 - During `terraform apply`, open the AWS Route53 console
   ([eu-central-1](https://eu-central-1.console.aws.amazon.com/route53/v2/home))
   and retrieve nameservers.
-- Or with cli (might need some time to propagate):
+
+  Or with cli (might need some time to propagate):
 
   ```bash
   terraform state show module.route53.aws_route53_zone.this
@@ -97,45 +114,25 @@ terraform apply -var-file=envs/dev.tfvars -auto-approve
 terraform output -raw kubeconfig > ~/.kube/config-eks
 export KUBECONFIG=~/.kube/config-eks
 kubectl cluster-info
+kubectl config set-context --current --namespace=selvoc-dev
 ```
 
-## Database and Message Queue Setup
+### 3. Provision Internal Infrastructure (In CI/CD)
 
-### PostgreSQL (Manual, Automation Planned)
+Internal infrastructure is provisioned using a self-hosted GitHub Actions runner
+deployed inside the VPC. To provision internal resources, trigger the
+[Terraform [internal]](../.github/workflows/terraform-internal.yaml) in GitHub Actions.
+
+## RabbitMQ Setup (Manual, Automation Planned)
 
 ```bash
-cd infrastructure/terraform/core
+cd ../core
 
 terraform output -raw kubeconfig > ~/.kube/config-eks
 export KUBECONFIG=~/.kube/config-eks
 kubectl config set-context --current --namespace=selvoc-dev
 
-# Port-forward RDS PostgreSQL
-helm install postgres-proxy ../../helm/postgres-proxy --set postgres.host=$(terraform output -raw rds_hostname)
-kubectl port-forward pod/postgres-proxy 5432:5432
-```
-
-- Connect to PostgreSQL (host: `localhost`, port: `5432`) using credentials
-  from AWS Secrets Manager (e.g., `selvoc/dev/postgres-credentials`).
-- Create databases and users based on `./configs/postgres/init/init-db.sql`
-  and AWS secrets (e.g., `selvoc/dev/service/*/postgres-credentials`).
-  Example:
-
-  ```sql
-  CREATE USER <username> WITH ENCRYPTED PASSWORD '<password>';
-  CREATE DATABASE <service_name>;
-  ALTER DATABASE <service_name> OWNER TO <username>;
-  ```
-
-- After completion:
-
-  ```bash
-  helm uninstall postgres-proxy
-  ```
-
-### RabbitMQ (Manual, Automation Planned)
-
-```bash
+# Port-forward RabbitMQ using Helm
 helm install rabbitmq-proxy ../../helm/rabbitmq-proxy --set rabbitmq.host=$(terraform output -raw mq_hostname)
 kubectl port-forward pod/rabbitmq-proxy 15671:15671
 ```
@@ -155,14 +152,14 @@ kubectl port-forward pod/rabbitmq-proxy 15671:15671
 
 - `AWS_REGION`: AWS region (e.g., `eu-central-1`)
 - `DOMAIN_NAME`: Your domain (e.g., `example.com`)
-- `TF_BACKEND_BUCKET`: S3 bucket name (from `terraform/bootstrap` output)
-- `TF_BACKEND_DYNAMODB_TABLE`: DynamoDB table name
-- `TF_BACKEND_KEY`: Terraform state file key
-- `TF_BACKEND_WORKSPACE_PREFIX`: Workspace prefix
-
-### Repository Variables
-
-- `TF_VERSION`: Terraform version (e.g., `1.11.4`)
+- `TF_CORE_BACKEND_BUCKET`: Core terraform backend S3 bucket name (from `terraform/bootstrap` output)
+- `TF_CORE_BACKEND_DYNAMODB_TABLE`: Core terraform backend DynamoDB table name
+- `TF_CORE_BACKEND_KEY`: Core terraform backend state file key
+- `TF_CORE_BACKEND_WORKSPACE_PREFIX`: Core terraform backend workspace prefix
+- `TF_INTERNAL_BACKEND_BUCKET`: Internal terraform backend S3 bucket name (from `terraform/bootstrap` output)
+- `TF_INTERNAL_BACKEND_DYNAMODB_TABLE`: Internal terraform backend DynamoDB table name
+- `TF_INTERNAL_BACKEND_KEY`: Internal terraform backend state file key
+- `TF_INTERNAL_BACKEND_WORKSPACE_PREFIX`: Internal terraform backend workspace prefix
 
 ### Environment Secrets (Per Environment: dev/prod)
 
@@ -174,6 +171,10 @@ kubectl port-forward pod/rabbitmq-proxy 15671:15671
 - `K8S_NAMESPACE`: Kubernetes namespace (e.g., `selvoc-dev`)
 - `KEYCLOAK_ADMIN_PASSWORD`: Keycloak admin password (set manually, change after first login)
 
+### Repository Variables
+
+- `TF_VERSION`: Terraform version (e.g., `1.11.4`)
+
 ### Environment Variables
 
 - `AWS_ECR_REPOSITORY_NAME_<SERVICE_NAME>`: ECR repository name per service
@@ -182,11 +183,12 @@ kubectl port-forward pod/rabbitmq-proxy 15671:15671
 
 ## Keycloak Configuration (Manual, Automation Planned)
 
-1. After Keycloak Helm installation, access Keycloak at
+1. Run `keycloak-ci-cd` GitHub Actions workflow to deploy Keycloak
+2. After Keycloak Helm installation and a few minutes, access Keycloak at
    `https://keycloak.selvoc.<DOMAIN_NAME>/admin/master/console/#/selvoc`.
-2. Log in with `admin` and the `KEYCLOAK_ADMIN_PASSWORD`.
-3. Ensure the `selvoc` realm is selected.
-4. Verify or create the following clients in the `selvoc` realm:
+3. Log in with `admin` and the `KEYCLOAK_ADMIN_PASSWORD`.
+4. Ensure the `selvoc` realm is selected.
+5. Verify or create the following clients in the `selvoc` realm:
    - `user-service`:
      - Client ID: `user-service`
      - Client Authentication: `ON`
@@ -196,7 +198,7 @@ kubectl port-forward pod/rabbitmq-proxy 15671:15671
      - Client ID: `chat-service`
      - Client Authentication: `ON`
      - Service account roles: `ON`
-5. For each client:
+6. For each client:
    - Retrieve the client secret from Keycloak > Clients > <CLIENT_NAME> > Credentials.
    - Store the secret in AWS Secrets Manager (e.g.,
      `selvoc/dev/service/<SERVICE_NAME>/keycloak-client-secret`) as a key/value
@@ -205,21 +207,9 @@ kubectl port-forward pod/rabbitmq-proxy 15671:15671
 ## Deploying Microservices
 
 1. Ensure Keycloak clients and AWS secrets are configured for each service.
-2. Trigger the CI/CD workflow for the microservice (e.g., `user-ci-cd`) in
-   GitHub Actions.
-
-## Planned Improvements
-
-- **EKS Access Control**: Currently, the EKS cluster is accessible from the
-  internet. The plan is to implement a custom GitHub Actions CI/CD runner
-  within the VPC, which will execute Terraform operations securely.
-- **Automated Internal Resource Provisioning**: With the custom runner in
-  place, a new Terraform directory, `internal`, will be introduced. This
-  directory will manage the creation of internal resources such as PostgreSQL
-  and RabbitMQ, automating what is currently a manual process.
-- **Terraform Directory Structure Refactor**: The `kubernetes` and `helm`
-  providers, along with their respective resources, will be migrated from the
-  `core` Terraform directory to the new `internal` directory. This change will
-  ensure that the `core` directory is focused solely on AWS resource
-  provisioning (not requiring private VPC access), while the `internal`
-  directory will handle resources that require VPC access.
+2. Trigger the CI/CD workflow for the microservice in GitHub Actions in the
+  following order:
+   1. `keycloak-ci-cd` (should already be done in the previous steps)
+   2. `user-ci-cd`
+   3. `chat-ci-cd`
+   4. `gateway-ci-cd`
