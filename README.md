@@ -69,11 +69,46 @@ asynchronously via RabbitMQ.
 
 ## Usage
 
-- **Gateway**: `http://localhost:3000/graphql`
-- **User Service**: `http://localhost:3001/graphql`
-- **Chat Service**: `http://localhost:3002/graphql`
+- **Keycloak Admin**: [http://localhost:8080/admin/master/console/#/selvoc-local](http://localhost:8080/admin/master/console/#/selvoc-local)
+- **Gateway**: [http://localhost:3000/graphql](http://localhost:3000/graphql)
+- **User Service**:  [http://localhost:3001/graphql](http://localhost:3001/graphql)
+- **Chat Service**:  [http://localhost:3002/graphql](http://localhost:3002/graphql)
 
 Health checks and version info are available at `/health` and `/version` on each service.
+
+### Sign In & Sign Up
+
+Go to Sign In page [http://localhost:8080/realms/selvoc-local/account/](http://localhost:8080/realms/selvoc-local/account/)
+and register a new user.
+
+### Get Access Token for API Calls
+
+After registration, you can get an access token using this cURL command:
+
+```bash
+curl --location 'http://localhost:8080/realms/selvoc-local/protocol/openid-connect/token' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'client_id=user-service' \
+  --data-urlencode 'client_secret=rKRVLnPl2j5OIrSRVinZUHhPuaAWmMsd' \
+  --data-urlencode 'username=YOUR_USERNAME' \
+  --data-urlencode 'password=YOUR_PASSWORD' \
+  --data-urlencode 'grant_type=password'
+```
+
+> Note: Provided `client_secret` is valid only for `selvoc-local` realm.
+
+### Use The Access Token to Call GraphQL APIs
+
+Either use a GraphQL playground ([http://localhost:3000/graphql](http://localhost:3000/graphql)) or cURL.
+For example:
+
+```bash
+curl --request POST \
+  --url http://localhost:3000/graphql \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  --data '{"query":"query Q { me { email } }"}'
+```
 
 ## Configuration
 
