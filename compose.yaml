@@ -28,6 +28,8 @@ services:
       timeout: 5s
       retries: 5
     volumes:
+      - ./configs/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - rabbitmq_data:/var/lib/rabbitmq/
 
   keycloak:
